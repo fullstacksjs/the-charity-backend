@@ -1,20 +1,20 @@
 import { registerAs } from '@nestjs/config';
-import { IAppConfig } from '../../@types/env';
 import Joi from 'joi';
+
+interface IAppConfig {
+  nodeEnv: string;
+  port: number;
+}
 
 export default registerAs('app', () => {
   const values: IAppConfig = {
     nodeEnv: process.env['NODE_ENV'],
     port: parseInt(process.env['PORT']),
-    host: process.env['HOST'],
   };
 
   const schema = Joi.object<IAppConfig, true>({
-    nodeEnv: Joi.string()
-      .required()
-      .valid('development', 'production', 'testing'),
+    nodeEnv: Joi.string().required().valid('development', 'production', 'test'),
     port: Joi.number().required(),
-    host: Joi.string().required(),
   });
 
   const { error } = schema.validate(values, { abortEarly: true });
