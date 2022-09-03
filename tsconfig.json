@@ -2,6 +2,7 @@
   "extends": "@fullstacksjs/tsconfig",
   "compilerOptions": {
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "outDir": "./dist"
   },
   "include": ["src", "@types"]
