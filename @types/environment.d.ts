@@ -1,10 +1,1 @@
-export {};
-
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      PORT: string;
-      NODE_ENV: string;
-    }
-  }
-}
+type Env = 'HOST' | 'NODE_ENV' | 'PORT';
