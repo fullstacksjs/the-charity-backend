@@ -1,18 +1,27 @@
+import {
+  getEnv as baseGetEnv,
+  getNodeEnv,
+  toInteger,
+} from '@fullstacksjs/toolbox';
 import { registerAs } from '@nestjs/config';
 import Joi from 'joi';
 
-interface IAppConfig {
-  nodeEnv: string;
-  port: number;
+const getEnv = baseGetEnv<Env>;
+
+export interface AppConfig {
+  nodeEnv?: string;
+  port?: number;
 }
 
 export default registerAs('app', () => {
-  const values: IAppConfig = {
-    nodeEnv: process.env['NODE_ENV'],
-    port: parseInt(process.env['PORT']),
+  const port = getEnv('PORT');
+
+  const values: AppConfig = {
+    nodeEnv: getNodeEnv(),
+    port: port ? toInteger(port) : undefined,
   };
 
-  const schema = Joi.object<IAppConfig, true>({
+  const schema = Joi.object<AppConfig, true>({
     nodeEnv: Joi.string().required().valid('development', 'production', 'test'),
     port: Joi.number().required(),
   });

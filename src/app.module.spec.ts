@@ -1,5 +1,5 @@
-import { Test } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
+import { Test } from '@nestjs/testing';
 
 describe('AppModule', () => {
   it('should compile and load app module', async () => {
