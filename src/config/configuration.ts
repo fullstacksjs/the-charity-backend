@@ -18,7 +18,7 @@ export default registerAs('app', () => {
 
   const values: AppConfig = {
     nodeEnv: getNodeEnv(),
-    port: port ? toInteger(port) : undefined!,
+    port: port ? toInteger(port) : undefined,
   };
 
   const schema = Joi.object<AppConfig, true>({
