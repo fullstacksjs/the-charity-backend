@@ -15,7 +15,6 @@ export interface AppConfig {
 
 export default registerAs('app', () => {
   const port = getEnv('PORT');
-  console.log(port);
 
   const values: AppConfig = {
     nodeEnv: getNodeEnv(),
