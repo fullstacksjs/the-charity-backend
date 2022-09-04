@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import path from 'path';
 
 import configuration from './config/configuration';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import configuration from './config/configuration';
       envFilePath: [path.join(process.cwd(), `.${getNodeEnv()}.env`)],
       load: [configuration],
     }),
+    PrismaModule,
   ],
 })
 export class AppModule {}

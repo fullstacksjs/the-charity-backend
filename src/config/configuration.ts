@@ -13,7 +13,7 @@ export interface AppConfig {
   port?: number;
 }
 
-export default registerAs('app', () => {
+export default registerAs('', () => {
   const port = getEnv('PORT');
 
   const values: AppConfig = {

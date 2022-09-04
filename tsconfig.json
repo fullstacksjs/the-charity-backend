@@ -3,7 +3,8 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "esModuleInterop": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "emitDecoratorMetadata": true
   },
   "include": ["src", "@types"]
 }
