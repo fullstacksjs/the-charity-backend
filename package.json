@@ -25,7 +25,8 @@
     "spell": "cspell ./src/**/*",
     "migration:add": "dotenv -e .development.env prisma migrate dev",
     "migration:deploy": "dotenv -e .production.env -e .development.env prisma migrate deploy",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "seed": "dotenv -e .production.env -e .development.env prisma db seed"
   },
   "dependencies": {
     "@nestjs/common": "9.0.11",
@@ -33,7 +34,9 @@
     "@nestjs/core": "9.0.11",
     "@nestjs/platform-express": "9.0.11",
     "@prisma/client": "4.3.1",
+    "argon2": "0.29.1",
     "joi": "17.6.0",
+    "nanoid": "3.3.4",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
     "rxjs": "7.5.6"
@@ -68,5 +71,8 @@
   "volta": {
     "node": "16.17.0",
     "npm": "8.18.0"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }
