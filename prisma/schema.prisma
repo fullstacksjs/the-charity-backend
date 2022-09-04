@@ -1,0 +1,22 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// reason to use singular name for table names: https://stackoverflow.com/questions/338156/table-naming-dilemma-singular-vs-plural-names
+
+model Admin {
+  id String @id @default(cuid())
+
+  username String @unique
+  password String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("admin")
+}
