@@ -13,6 +13,7 @@ import { PrismaModule } from './prisma/prisma.module';
       isGlobal: true,
       envFilePath: [path.join(process.cwd(), `.${getNodeEnv()}.env`)],
       validationSchema: Joi.object({
+        /* eslint-disable @typescript-eslint/naming-convention */
         NODE_ENV: Joi.string()
           .valid('production')
           .valid('development')
@@ -22,6 +23,7 @@ import { PrismaModule } from './prisma/prisma.module';
         DATABASE_URL: Joi.string()
           .uri({ scheme: ['file'] })
           .required(),
+        /* eslint-enable @typescript-eslint/naming-convention */
       }),
     }),
     PrismaModule,
