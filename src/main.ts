@@ -16,8 +16,6 @@ async function bootstrap() {
   // Null-safety is handled in Service
   const port = configService.get('PORT');
 
-  console.log({ port });
-
   await app.listen(port);
 }
 
