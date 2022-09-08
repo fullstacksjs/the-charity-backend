@@ -2,7 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app.module';
-import type { EnvironmentVariables } from './configuration/types';
+import type { EnvironmentVariables } from './configuration/EnvironmentVariables';
 import { PrismaService } from './prisma/prisma.service';
 
 async function bootstrap() {
