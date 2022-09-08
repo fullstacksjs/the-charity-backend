@@ -1,0 +1,339 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Admin {
+  id: ID!
+  email: String!
+  password: String!
+}
+
+type Project {
+  id: ID!
+  name: String!
+  families: [family!]!
+}
+
+"""family = [ draft-family, complete-family ]"""
+union family = DraftFamily | CompleteFamily
+
+type DraftFamily {
+  id: ID!
+  name: String!
+  archived: Boolean!
+  referrerCode: String!
+  completedDate: DateTime
+  projects: [Project!]!
+  dependents: [Dependent!]!
+  draftDate: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type CompleteFamily {
+  id: ID!
+  name: String!
+  archived: Boolean!
+  referrerCode: String!
+  completedDate: DateTime
+  projects: [Project!]!
+  dependents: [Dependent!]!
+}
+
+type Document {
+  url: String!
+}
+
+type Dependent implements IMember {
+  id: ID!
+  firstName: String
+  lastName: String
+  fatherName: String
+  nationalId: String
+  ssn: String
+  identityDocument: [Document!]!
+  dateOfBirth: DateTime
+  cityOfBirth: DateTime
+  issuedAt: DateTime
+  gender: Gender
+  nationality: String
+  religion: Religion
+  family: family!
+}
+
+interface IMember {
+  id: ID!
+  firstName: String
+  lastName: String
+  fatherName: String
+  nationalId: String
+  ssn: String
+  identityDocument: [Document!]!
+  dateOfBirth: DateTime
+  cityOfBirth: DateTime
+  issuedAt: DateTime
+  gender: Gender
+  nationality: String
+  religion: Religion
+  family: family!
+}
+
+"""religion of the members"""
+enum Gender {
+  """gender is male"""
+  male
+
+  """gender is female."""
+  female
+}
+
+"""religion of the members"""
+enum Religion {
+  """the religion of the member is islam"""
+  islam
+
+  """the religion of the member is christian"""
+  christianity
+}
+
+type BankAccount {
+  bankName: String!
+  cardNumber: String!
+  iban: IBAN!
+  accountNumber: String!
+}
+
+"""A simple IBAN parser"""
+scalar IBAN
+
+type Address {
+  city: String!
+  street: String!
+  plaque: String!
+}
+
+type Contact {
+  address: Address!
+  phoneNumber: String!
+  mobilePhoneNumber: String!
+}
+
+type Insurance {
+  organization: String!
+  startDate: DateTime!
+}
+
+type Job {
+  title: String!
+  averageIncome: Money!
+  active: Boolean!
+}
+
+"""A simple Money parser"""
+scalar Money
+
+type Possession {
+  description: String!
+}
+
+type Skill {
+  name: String!
+  description: String!
+}
+
+type Subsidy {
+  type: SubsidyType!
+  description: String!
+  income: Money!
+}
+
+"""subsidy types"""
+enum SubsidyType {
+  sth
+}
+
+type Query {
+  projects: [Project!]!
+  project(id: Int!): Project!
+  families: [family!]!
+  family(id: Int!): family!
+  householders: [householder!]!
+  householder(id: Int!): householder!
+  dependents: [Dependent!]!
+  dependent(id: Int!): Dependent!
+  admins: [Admin!]!
+  admin(id: Int!): Admin!
+}
+
+"""householder = [ draft-house, complete-house ]"""
+union householder = DraftHouseholder | CompleteHouseholder
+
+type DraftHouseholder implements IMember {
+  id: ID!
+  firstName: String
+  lastName: String
+  fatherName: String
+  nationalId: String
+  ssn: String
+  identityDocument: [Document!]!
+  dateOfBirth: DateTime
+  cityOfBirth: DateTime
+  issuedAt: DateTime
+  gender: Gender
+  nationality: String
+  religion: Religion
+  family: family!
+  personalPhoto: Document
+  addicted: Boolean
+  isAddicted: Boolean
+  hasBeenAddicted: Boolean
+  rent: Money
+  nearbyMosqueAddress: String
+  nearbySupermarketAddress: String
+  priorAccommodationAddress: String
+  accommodationType: AccommodationType
+  educationStatus: EducationStatus
+  lastDiploma: Diploma
+  contacts: [Contact!]
+  dependent: [Dependent!]
+  maritalStatus: MaritalStatus
+  skills: [Skill!]
+  jobs: [Job!]
+  subsidies: [Subsidy!]
+  bankAccounts: [BankAccount!]
+  description: String
+  possessions: [Possession!]
+  disabilityStatus: DisabilityStatus
+  disabilityDocuments: [Document!]
+  disabilityDescription: String
+  healthStatus: HealthStatus
+  healthDocuments: [Document!]
+  healthDescription: String
+  insurance: [Insurance!]
+  secondHouseholderProblem: SecondHouseholderProblem
+}
+
+"""accommodation type of the householder"""
+enum AccommodationType {
+  """householder is owner of the house"""
+  owner
+
+  """householder rents house for specific range of time"""
+  rent
+}
+
+"""education status of people"""
+enum EducationStatus {
+  sth
+}
+
+"""religion of the members"""
+enum Diploma {
+  """none"""
+  none
+
+  """highschool"""
+  highschool
+
+  """bachelor"""
+  bachelor
+
+  """master"""
+  master
+}
+
+"""marital status of the householder"""
+enum MaritalStatus {
+  married
+  single
+  separated
+  divorced
+  widowed
+}
+
+"""disability status"""
+enum DisabilityStatus {
+  sth
+}
+
+"""health status"""
+enum HealthStatus {
+  sth
+}
+
+"""second householder problem = [ prison | divorced | death ]"""
+union SecondHouseholderProblem = Prison | Divorced | Death
+
+type Prison {
+  relation: String!
+  duration: String!
+  cause: String!
+  address: String!
+  freedomDate: DateTime!
+  description: String!
+}
+
+type Divorced {
+  date: DateTime!
+  cause: String!
+  mehrie: String!
+  mehrieStatus: String!
+  mehrieDescription: String!
+  currentCareTaker: String!
+  description: String!
+}
+
+type Death {
+  relation: String!
+  date: DateTime!
+  cause: String!
+}
+
+type CompleteHouseholder implements IMember {
+  id: ID!
+  firstName: String!
+  lastName: String
+  fatherName: String
+  nationalId: String
+  ssn: String
+  identityDocument: [Document!]!
+  dateOfBirth: DateTime
+  cityOfBirth: DateTime
+  issuedAt: DateTime
+  gender: Gender
+  nationality: String
+  religion: Religion
+  family: family!
+  personalPhoto: Document!
+  addicted: Boolean!
+  isAddicted: Boolean!
+  hasBeenAddicted: Boolean!
+  rent: Money!
+  nearbyMosqueAddress: String!
+  nearbySupermarketAddress: String!
+  priorAccommodationAddress: String!
+  accommodationType: AccommodationType!
+  educationStatus: EducationStatus!
+  lastDiploma: Diploma!
+  contacts: [Contact!]!
+  dependent: [Dependent!]
+  maritalStatus: MaritalStatus!
+  skills: [Skill!]!
+  jobs: [Job!]!
+  subsidies: [Subsidy!]!
+  bankAccounts: [BankAccount!]!
+  description: String!
+  possessions: [Possession!]!
+  disabilityStatus: DisabilityStatus!
+  disabilityDocuments: [Document!]!
+  disabilityDescription: String!
+  healthStatus: HealthStatus!
+  healthDocuments: [Document!]!
+  healthDescription: String!
+  insurance: [Insurance!]!
+  secondHouseholderProblem: SecondHouseholderProblem!
+  dependents: [Dependent!]!
+}

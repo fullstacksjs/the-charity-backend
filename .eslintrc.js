@@ -59,5 +59,8 @@ module.exports = {
         custom: { regex: '^I[A-Z]', match: false },
       },
     ],
+    '@typescript-eslint/no-extraneous-class': 'off',
+    'fp/no-let': 'off',
+    'import/no-cycle': 'off',
   },
 };
