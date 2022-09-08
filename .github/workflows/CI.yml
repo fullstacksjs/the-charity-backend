@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - dev
+      - main
   workflow_dispatch:
 
 jobs:
@@ -26,5 +27,5 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Test
-        run: npm run test:ci
+      - name: Unit Test
+        run: npx --no-install jest --ci
