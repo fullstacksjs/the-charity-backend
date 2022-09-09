@@ -1,11 +1,11 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum MaritalStatus {
-  married = 'MARRIED',
-  single = 'SINGLE',
-  separated = 'SEPARATED',
-  divorced = 'DIVORCED',
-  widowed = 'WIDOWED',
+  Married = 'MARRIED',
+  Single = 'SINGLE',
+  Separated = 'SEPARATED',
+  Divorced = 'DIVORCED',
+  Widowed = 'WIDOWED',
 }
 
 registerEnumType(MaritalStatus, {

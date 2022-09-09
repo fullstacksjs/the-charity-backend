@@ -35,7 +35,6 @@ const mocks = {
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: 'src/schema.gql',
       playground: false,
       debug: true,
       mocks,

@@ -1,26 +1,26 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum Diploma {
-  none = 'NONE',
-  highschool = 'HIGHSCHOOL',
-  bachelor = 'BACHELOR',
-  master = 'MASTER',
+  None = 'NONE',
+  Highschool = 'HIGHSCHOOL',
+  Bachelor = 'BACHELOR',
+  Master = 'MASTER',
 }
 
 registerEnumType(Diploma, {
   name: 'Diploma',
   description: 'religion of the members',
   valuesMap: {
-    none: {
+    None: {
       description: 'none',
     },
-    highschool: {
+    Highschool: {
       description: 'highschool',
     },
-    bachelor: {
+    Bachelor: {
       description: 'bachelor',
     },
-    master: {
+    Master: {
       description: 'master',
     },
   },

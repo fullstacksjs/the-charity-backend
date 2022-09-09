@@ -1,7 +1,7 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum SubsidyType {
-  sth = 'STH',
+  Sth = 'STH',
 }
 
 registerEnumType(SubsidyType, {

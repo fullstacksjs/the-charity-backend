@@ -1,7 +1,7 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum EducationStatus {
-  sth = 'STH',
+  Sth = 'STH',
 }
 
 registerEnumType(EducationStatus, {

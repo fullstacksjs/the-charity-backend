@@ -27,7 +27,7 @@ export class Prison {
 }
 
 export enum MehrieStatus {
-  sth = 'STH',
+  Sth = 'STH',
 }
 
 registerEnumType(MehrieStatus, {

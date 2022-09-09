@@ -1,18 +1,18 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum Religion {
-  islam = 'islam',
-  christianity = 'CHRISTIANITY',
+  Islam = 'ISLAM',
+  Christianity = 'CHRISTIANITY',
 }
 
 registerEnumType(Religion, {
   name: 'Religion',
   description: 'religion of the members',
   valuesMap: {
-    islam: {
+    Islam: {
       description: 'the religion of the member is islam',
     },
-    christianity: {
+    Christianity: {
       description: 'the religion of the member is christian',
     },
   },

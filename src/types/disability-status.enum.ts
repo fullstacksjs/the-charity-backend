@@ -1,7 +1,7 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum DisabilityStatus {
-  sth = 'STH',
+  Sth = 'STH',
 }
 
 registerEnumType(DisabilityStatus, {

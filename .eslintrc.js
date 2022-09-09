@@ -1,3 +1,4 @@
+/** @type { import('eslint').Linter.Config } */
 module.exports = {
   extends: ['@fullstacksjs', '@fullstacksjs/eslint-config/typecheck'],
   parserOptions: {
@@ -59,8 +60,13 @@ module.exports = {
         custom: { regex: '^I[A-Z]', match: false },
       },
     ],
-    '@typescript-eslint/no-extraneous-class': 'off',
-    'fp/no-let': 'off',
-    'import/no-cycle': 'off',
   },
+  overrides: [
+    {
+      files: ['./src/**/*.entity.ts'],
+      rules: {
+        'import/no-cycle': 'off',
+      },
+    },
+  ],
 };
