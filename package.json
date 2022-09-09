@@ -36,7 +36,7 @@
     "rxjs": "7.5.6"
   },
   "devDependencies": {
-    "@fullstacksjs/eslint-config": "8.6.0",
+    "@fullstacksjs/eslint-config": "8.7.1",
     "@fullstacksjs/toolbox": "2.19.0",
     "@fullstacksjs/tsconfig": "0.6.0",
     "@nestjs/cli": "9.1.1",

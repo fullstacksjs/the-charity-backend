@@ -7,7 +7,5 @@ module.exports = {
   },
   root: true,
   ignorePatterns: ['.eslintrc.js'],
-  rules: {
-    '@typescript-eslint/no-extraneous-class': 'off',
-  },
+  rules: {},
 };
