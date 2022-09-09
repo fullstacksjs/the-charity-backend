@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { CustomIBAN } from '../scalars/iban.scalar';
+import { IBAN } from '../../shared/scalars/iban.scalar';
 
 @ObjectType()
 export class BankAccount {
@@ -10,7 +10,7 @@ export class BankAccount {
   @Field()
   declare cardNumber: string;
 
-  @Field(() => CustomIBAN)
+  @Field(() => IBAN)
   declare iban: string;
 
   @Field()

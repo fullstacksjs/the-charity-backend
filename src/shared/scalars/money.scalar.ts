@@ -7,9 +7,9 @@ function validate(money: unknown): never | string {
   return money;
 }
 
-export const CustomMoney = new GraphQLScalarType({
+export const Money = new GraphQLScalarType({
   name: 'Money',
-  description: 'A simple Money parser',
+  description: 'A positive number',
   serialize: value => validate(value),
   parseValue: value => validate(value),
 });

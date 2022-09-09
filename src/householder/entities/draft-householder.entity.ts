@@ -1,31 +1,29 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import { Dependent } from '../../dependent/entities/dependent.entity';
-import { CustomMoney } from '../../scalars/money.scalar';
-import { AccommodationType } from '../../types/accommodation.enum';
-import { BankAccount } from '../../types/bank-account.type';
-import { Contact } from '../../types/contact.type';
-import { Diploma } from '../../types/diploma.enum';
-import { DisabilityStatus } from '../../types/disability-status.enum';
-import { Document } from '../../types/document.type';
-import { EducationStatus } from '../../types/education-status.enum';
-import { HealthStatus } from '../../types/health-status.enum';
-import { Insurance } from '../../types/insurance.type';
-import { Job } from '../../types/job.type';
-import { MaritalStatus } from '../../types/marital-status.enum';
-import IMember from '../../types/member.entity';
-import { Possession } from '../../types/possession.type';
-import type {
-  Death,
-  Divorced,
-  Prison,
-} from '../../types/second-householder-problem.union';
-import { SecondHouseholderProblem } from '../../types/second-householder-problem.union';
-import { Skill } from '../../types/skill.type';
-import { Subsidy } from '../../types/subsidy';
+import { Document } from '../../shared/document.type';
+import { Member } from '../../shared/member';
+import { Money } from '../../shared/scalars';
+import type { Death, Divorced, Prison } from '../types';
+import {
+  AccommodationType,
+  BankAccount,
+  Contact,
+  Diploma,
+  DisabilityStatus,
+  EducationStatus,
+  HealthStatus,
+  Insurance,
+  Job,
+  MaritalStatus,
+  Possession,
+  SecondHouseholderProblem,
+  Skill,
+  Subsidy,
+} from '../types';
 
-@ObjectType({ implements: IMember })
-export class DraftHouseholder extends IMember {
+@ObjectType({ implements: Member })
+export class DraftHouseholder extends Member {
   @Field(() => Document, { nullable: true })
   personalPhoto?: Document;
 
@@ -38,7 +36,7 @@ export class DraftHouseholder extends IMember {
   @Field({ nullable: true })
   hasBeenAddicted?: boolean;
 
-  @Field(() => CustomMoney, { nullable: true })
+  @Field(() => Money, { nullable: true })
   rent?: string;
 
   @Field({ nullable: true })

@@ -7,9 +7,9 @@ function validate(iban: unknown): never | string {
   return iban;
 }
 
-export const CustomIBAN = new GraphQLScalarType({
+export const IBAN = new GraphQLScalarType({
   name: 'IBAN',
-  description: 'A simple IBAN parser',
+  description: 'An IBAN',
   serialize: value => validate(value),
   parseValue: value => validate(value),
 });

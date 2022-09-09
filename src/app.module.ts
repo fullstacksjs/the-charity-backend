@@ -12,8 +12,8 @@ import { FamilyModule } from './family/family.module';
 import { HouseholderModule } from './householder/householder.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProjectModule } from './project/project.module';
-import { CustomIBAN } from './scalars/iban.scalar';
-import { CustomMoney } from './scalars/money.scalar';
+import { IBAN } from './shared/scalars/iban.scalar';
+import { Money } from './shared/scalars/money.scalar';
 
 const mocks = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -38,8 +38,8 @@ const mocks = {
       playground: false,
       debug: true,
       mocks,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      resolvers: { Money: CustomMoney, IBAN: CustomIBAN },
+      autoSchemaFile: true,
+      resolvers: { Money, IBAN },
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     ProjectModule,

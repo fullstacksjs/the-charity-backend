@@ -8,3 +8,4 @@ export const Family = createUnionType({
   description: 'family = [ draft-family, complete-family ]',
   types: () => [DraftFamily, CompleteFamily] as const,
 });
+export type Family = typeof Family;

@@ -1,14 +1,14 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { CustomMoney } from '../scalars/money.scalar';
+import { Money } from '../../shared/scalars/money.scalar';
 
 @ObjectType()
 export class Job {
   @Field()
   declare title: string;
 
-  @Field(() => CustomMoney)
-  declare averageIncome: string;
+  @Field(() => Money)
+  declare rageIncome: string;
 
   @Field()
   declare active: boolean;

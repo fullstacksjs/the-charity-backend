@@ -1,14 +1,12 @@
 import { Field, ID, InterfaceType } from '@nestjs/graphql';
 
-import type { CompleteFamily } from '../family/entities/complete-family.entity';
-import type { DraftFamily } from '../family/entities/draft-family.entity';
-import { Family } from '../family/entities/family.entity';
-import { Document } from './document.type';
+import { Family } from '../../family/entities/family.entity';
+import { Document } from '../document.type';
 import { Gender } from './gender.enum';
 import { Religion } from './religion.enum';
 
 @InterfaceType()
-export default abstract class IMember {
+export abstract class Member {
   @Field(() => ID)
   declare id: number;
 
@@ -49,5 +47,5 @@ export default abstract class IMember {
   religion?: Religion;
 
   @Field(() => Family)
-  declare family: CompleteFamily | DraftFamily;
+  declare family: Family;
 }

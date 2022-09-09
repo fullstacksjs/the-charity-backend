@@ -1,6 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
 
-import IMember from '../../types/member.entity';
+import { Member } from '../../shared';
 
-@ObjectType({ implements: IMember })
-export class Dependent extends IMember {}
+@ObjectType({ implements: Member })
+export class Dependent extends Member {}
