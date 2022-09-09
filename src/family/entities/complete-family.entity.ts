@@ -1,13 +1,9 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
-import { Dependent } from '../../dependent/entities/dependent.entity';
-import { Project } from '../../project/entities/project.entity';
+import { DraftFamily } from './draft-family.entity';
 
 @ObjectType()
-export class CompleteFamily {
-  @Field(() => ID)
-  declare id: number;
-
+export class CompleteFamily extends DraftFamily {
   @Field()
   declare name: string;
 
@@ -17,12 +13,6 @@ export class CompleteFamily {
   @Field()
   declare referrerCode: string;
 
-  @Field({ nullable: true })
+  @Field()
   declare completedDate: Date;
-
-  @Field(() => [Project])
-  declare projects: Project[];
-
-  @Field(() => [Dependent])
-  declare dependents: Dependent[];
 }
