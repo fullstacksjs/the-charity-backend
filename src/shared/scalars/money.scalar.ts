@@ -1,6 +1,7 @@
 import { GraphQLScalarType } from 'graphql';
 
 function validate(money: unknown): never | string {
+  // FIXME: Implement this one
   if (typeof money !== 'string') {
     throw new Error('invalid money');
   }

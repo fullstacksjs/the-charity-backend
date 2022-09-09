@@ -1,6 +1,7 @@
 import { GraphQLScalarType } from 'graphql';
 
 function validate(iban: unknown): never | string {
+  // FIXME: Implement this one
   if (typeof iban !== 'string') {
     throw new Error('invalid iban');
   }

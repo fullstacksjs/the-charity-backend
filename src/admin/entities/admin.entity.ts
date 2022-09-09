@@ -7,7 +7,4 @@ export class Admin {
 
   @Field()
   declare email: string;
-
-  @Field()
-  declare password: string;
 }
