@@ -4,7 +4,6 @@ import { Dependent } from '../../dependent/entities/dependent.entity';
 import { Document } from '../../shared/document.type';
 import { Member } from '../../shared/member';
 import { Money } from '../../shared/scalars';
-import type { Death, Divorced, Prison } from '../types';
 import {
   AccommodationType,
   BankAccount,
@@ -60,8 +59,8 @@ export class DraftHouseholder extends Member {
   @Field(() => [Contact], { nullable: true })
   contacts?: Contact[];
 
-  @Field(() => [Dependent], { nullable: true })
-  dependent?: Dependent[];
+  @Field(() => [Dependent])
+  dependent: Dependent[];
 
   @Field(() => MaritalStatus, { nullable: true })
   maritalStatus?: MaritalStatus;
@@ -106,5 +105,5 @@ export class DraftHouseholder extends Member {
   insurance?: Insurance[];
 
   @Field(() => SecondHouseholderProblem, { nullable: true })
-  secondHouseholderProblem?: Death | Divorced | Prison;
+  secondHouseholderProblem?: SecondHouseholderProblem;
 }

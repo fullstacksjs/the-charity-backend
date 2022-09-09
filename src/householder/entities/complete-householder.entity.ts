@@ -2,7 +2,6 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 import { Dependent } from '../../dependent/entities/dependent.entity';
 import { Document, Member, Money } from '../../shared';
-import type { Death, Divorced, Prison } from '../types';
 import {
   AccommodationType,
   BankAccount,
@@ -108,5 +107,5 @@ export class CompleteHouseholder extends DraftHouseholder {
   declare insurance: Insurance[];
 
   @Field(() => SecondHouseholderProblem)
-  declare secondHouseholderProblem: Death | Divorced | Prison;
+  declare secondHouseholderProblem: SecondHouseholderProblem;
 }

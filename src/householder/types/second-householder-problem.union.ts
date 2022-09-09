@@ -76,3 +76,5 @@ export const SecondHouseholderProblem = createUnionType({
   description: 'second householder problem = [ prison | divorced | death ]',
   types: () => [Prison, Divorced, Death] as const,
 });
+
+export type SecondHouseholderProblem = Death | Divorced | Prison;
