@@ -60,7 +60,7 @@ export class DraftHouseholder extends Member {
   contacts?: Contact[];
 
   @Field(() => [Dependent])
-  dependent: Dependent[];
+  declare dependent: Dependent[];
 
   @Field(() => MaritalStatus, { nullable: true })
   maritalStatus?: MaritalStatus;
