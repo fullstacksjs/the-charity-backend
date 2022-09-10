@@ -9,7 +9,7 @@
     "start": "nest start",
     "dev": "dotenv -e .development.env nest start --watch",
     "debug": "dotenv -e .development.env nest start --debug --watch",
-    "lint:ci": "eslint {src,prisma}/",
+    "lint:ci": "eslint . --ext .ts",
     "lint": "npm run lint:ci -- --fix",
     "test": "dotenv -e .test.env jest",
     "test:watch": "npm run test -- --watch",
