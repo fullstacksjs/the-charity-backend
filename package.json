@@ -18,7 +18,7 @@
     "generate": "prisma generate",
     "seed": "dotenv -e .development.env prisma db seed",
     "spell": "cspell ./src/**/*",
-    "prepare": "prepare"
+    "prepare": "./scripts/prepare"
   },
   "dependencies": {
     "@nestjs/common": "9.0.11",
