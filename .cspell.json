@@ -5,7 +5,7 @@
   "dictionaryDefinitions": [
     {
       "name": "charity",
-      "path": "./dictionary.txt",
+      "path": "./configs/cspell/dictionary.txt",
       "addWords": true
     }
   ],

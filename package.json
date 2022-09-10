@@ -1,26 +1,24 @@
 {
   "name": "the-charity-backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
     "start": "nest start",
     "dev": "dotenv -e .development.env nest start --watch",
     "debug": "dotenv -e .development.env nest start --debug --watch",
-    "lint:ci": "eslint  \"{src,apps,libs,test}/**/*.ts\"",
+    "lint:ci": "eslint . --ext .ts",
     "lint": "npm run lint:ci -- --fix",
     "test": "dotenv -e .test.env jest",
     "test:watch": "npm run test -- --watch",
     "test:debug": "dotenv node -e .test.env --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "prepare": "husky install",
     "migrate": "dotenv -e .development.env prisma migrate dev",
     "generate": "prisma generate",
     "seed": "dotenv -e .development.env prisma db seed",
-    "spell": "cspell ./src/**/*"
+    "spell": "cspell ./src/**/*",
+    "prepare": "./scripts/prepare"
   },
   "dependencies": {
     "@nestjs/common": "9.0.11",
