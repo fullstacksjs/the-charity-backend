@@ -45,6 +45,12 @@ to run the app in the development environment just run:
 npm run dev
 ```
 
+### Run in debug mode
+
+```bash
+npm run debug
+```
+
 ### Build
 
 To build the app just run:
@@ -69,16 +75,22 @@ To run the unit tests run:
 npm run test
 ```
 
-### Add migration
+### Run test and debug
 
 ```bash
-npm run migrate
+npm run test:debug
 ```
 
 ### Run tests and watch
 
 ```bash
 npm run test:watch
+```
+
+### Add migration or apply it on development environment
+
+```bash
+npm run migrate
 ```
 
 ### Find Spelling Errors
