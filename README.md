@@ -89,6 +89,9 @@ To find spelling errors just run
 npm run spell
 ```
 
+If you wanted to add a new word so that it won't count as spelling error, just
+add it to the `configs/cspell/dictionary.txt` and separate with a new line
+
 ## General Notes
 
 - if you are using [vscode][vscode] you can use [Prisma
