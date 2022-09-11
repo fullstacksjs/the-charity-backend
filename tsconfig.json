@@ -1,0 +1,10 @@
+{
+  "extends": "@fullstacksjs/tsconfig",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "emitDecoratorMetadata": true
+  },
+  "include": ["src", "prisma", "@types"]
+}

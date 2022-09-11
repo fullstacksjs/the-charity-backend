@@ -1,0 +1,7 @@
+{
+  "*.{md,json,yml,yaml,html}": [
+    "prettier --write",
+    "cspell --no-must-find-files"
+  ],
+  "*.ts": ["eslint --fix", "cspell --no-must-find-files"]
+}

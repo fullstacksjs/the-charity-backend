@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+  workflow_dispatch:
+
+jobs:
+  verify:
+    concurrency: ci-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: volta-cli/action@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint and Format
+        run: npm run lint:ci
+
+      - name: Spell Check
+        run: npm run spell
+
+      - name: Build
+        run: npm run build
+
+      - name: Unit Test
+        run: npx --no-install jest --ci
