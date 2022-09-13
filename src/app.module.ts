@@ -37,6 +37,12 @@ const mocks = {
       driver: ApolloDriver,
       playground: false,
       debug: true,
+      cors: {
+        // TODO: origin should be moved into configModule - not sure regex is valid!
+        // https://www.debuggex.com/r/XTrC-yG2Yeq2_sAm
+        origin: /https?:\/\/[a-z0-9\-_]+-fullstacks\.vercel\.app/,
+        credentials: true,
+      },
       mocks,
       autoSchemaFile: true,
       resolvers: { Money, IBAN },
