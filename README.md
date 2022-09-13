@@ -108,9 +108,14 @@ add it to the `configs/cspell/dictionary.txt` and separate with a new line
 
 - if you are using [vscode][vscode] you can use [Prisma
   extension][prisma-extension] for autocomplete on `schema.prisma` file
+- if you are using [vscode][vscode] you can use [Code Spell Checker
+  extension][cspell-extension] to check spelling error without running `cspell`
+  script
 
 [git]: https://git-scm.com/
 [volta]: https://volta.sh/
 [vscode]: https://code.visualstudio.com/
 [prisma-extension]:
   https://marketplace.visualstudio.com/items?itemName=Prisma.prisma
+[cspell-extension]:
+  https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker
