@@ -1,11 +1,12 @@
 import type { ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloDriver } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 
 import { AdminModule } from './admin/admin.module';
+import type { EnvironmentVariables } from './configuration/EnvironmentVariables';
 import validationSchema from './configuration/validation';
 import { DependentModule } from './dependent/dependent.module';
 import { FamilyModule } from './family/family.module';
@@ -33,20 +34,25 @@ const mocks = {
       isGlobal: true,
       validationSchema,
     }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      imports: [ConfigModule],
+      inject: [ConfigService],
       driver: ApolloDriver,
-      playground: false,
-      debug: true,
-      cors: {
-        // TODO: origin should be moved into configModule - not sure regex is valid!
-        // https://www.debuggex.com/r/XTrC-yG2Yeq2_sAm
-        origin: /https?:\/\/[a-z0-9\-_]+-fullstacks\.vercel\.app/,
-        credentials: true,
-      },
-      mocks,
-      autoSchemaFile: true,
-      resolvers: { Money, IBAN },
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      useFactory: (configService: ConfigService<EnvironmentVariables>) => ({
+        playground: false,
+        debug: true,
+        mocks,
+        autoSchemaFile: true,
+        resolvers: { Money, IBAN },
+        plugins: [ApolloServerPluginLandingPageLocalDefault()],
+        introspection: configService.get('INTROSPECTION_ENABLED'),
+        cors: {
+          // TODO: origin should be moved into configModule - not sure regex is valid!
+          // https://www.debuggex.com/r/XTrC-yG2Yeq2_sAm
+          origin: /https?:\/\/[a-z0-9\-_]+-fullstacks\.vercel\.app/,
+          credentials: true,
+        },
+      }),
     }),
     ProjectModule,
     FamilyModule,

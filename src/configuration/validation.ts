@@ -11,6 +11,7 @@ const schema = Joi.object({
   DATABASE_URL: Joi.string()
     .uri({ scheme: ['file'] })
     .required(),
+  INTROSPECTION_ENABLED: Joi.boolean().default(false).required(),
   /* eslint-enable @typescript-eslint/naming-convention */
 });
 
