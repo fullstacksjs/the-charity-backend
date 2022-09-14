@@ -46,6 +46,12 @@ const mocks = {
         resolvers: { Money, IBAN },
         plugins: [ApolloServerPluginLandingPageLocalDefault()],
         introspection: configService.get('INTROSPECTION_ENABLED'),
+        cors: {
+          // TODO: origin should be moved into configModule - not sure regex is valid!
+          // https://www.debuggex.com/r/XTrC-yG2Yeq2_sAm
+          origin: /https?:\/\/[a-z0-9\-_]+-fullstacks\.vercel\.app/,
+          credentials: true,
+        },
       }),
     }),
     ProjectModule,
