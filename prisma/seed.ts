@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import type { Prisma } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
 import argon2 from 'argon2';
@@ -22,14 +23,16 @@ async function main() {
     console.log('the admin password is:', originalPassword);
   }
 
-  const testFamilyName = 'خانواده تستی';
+  const testFamily = { slug: 'test-family', name: faker.name.fullName() };
   const isTestFamilyExists = await prisma.family.findFirst({
-    where: { name: testFamilyName },
+    where: { slug: testFamily.slug },
   });
 
   if (!isTestFamilyExists) {
-    await prisma.family.create({ data: { name: testFamilyName } });
-    console.log(`test family created, test family name is "${testFamilyName}"`);
+    await prisma.family.create({ data: testFamily });
+    console.log(
+      `test family created, test family name is "${testFamily.name}"`,
+    );
   }
 }
 
