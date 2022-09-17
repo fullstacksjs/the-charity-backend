@@ -25,6 +25,7 @@ model Family {
   id String @id @default(cuid())
 
   name   String
+  slug   String       @unique
   status FamilyStatus @default(DRAFT)
 
   created_at DateTime @default(now())

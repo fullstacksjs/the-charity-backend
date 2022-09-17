@@ -27,11 +27,11 @@
     "@nestjs/core": "9.0.11",
     "@nestjs/graphql": "10.1.0",
     "@nestjs/platform-express": "9.0.11",
+    "@prisma/client": "4.3.1",
     "apollo-server-core": "3.10.2",
     "apollo-server-express": "3.10.2",
-    "graphql": "16.6.0",
-    "@prisma/client": "4.3.1",
     "argon2": "0.29.1",
+    "graphql": "16.6.0",
     "joi": "17.6.0",
     "nanoid": "3.3.4",
     "reflect-metadata": "0.1.13",
@@ -39,6 +39,7 @@
     "rxjs": "7.5.6"
   },
   "devDependencies": {
+    "@faker-js/faker": "7.5.0",
     "@fullstacksjs/eslint-config": "8.7.2",
     "@fullstacksjs/toolbox": "2.19.0",
     "@fullstacksjs/tsconfig": "0.6.0",
