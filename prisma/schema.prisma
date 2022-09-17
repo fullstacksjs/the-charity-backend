@@ -38,3 +38,22 @@ enum FamilyStatus {
   DRAFT
   COMPLETE
 }
+
+model Project {
+  id String @id @default(cuid())
+
+  name        String
+  description String?
+
+  status ProjectStatus @default(PLANNING)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  SUSPENDED
+  DONE
+}
