@@ -23,7 +23,7 @@ async function main() {
     console.log('the admin password is:', originalPassword);
   }
 
-  const testFamily = { slug: 'test-family-slug', name: faker.name.fullName() };
+  const testFamily = { slug: 'test-family', name: faker.name.fullName() };
   const isTestFamilyExists = await prisma.family.findFirst({
     where: { slug: testFamily.slug },
   });
