@@ -21,6 +21,16 @@ async function main() {
     await prisma.admin.create({ data: adminCreateInput, select: null });
     console.log('the admin password is:', originalPassword);
   }
+
+  const testFamilyName = 'خانواده تستی';
+  const isTestFamilyExists = await prisma.family.findFirst({
+    where: { name: testFamilyName },
+  });
+
+  if (!isTestFamilyExists) {
+    await prisma.family.create({ data: { name: testFamilyName } });
+    console.log(`test family created, test family name is "${testFamilyName}"`);
+  }
 }
 
 main()
