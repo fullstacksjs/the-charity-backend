@@ -8,5 +8,3 @@ IBAN
 Mehrie
 typecheck
 Procfile
-خانواده
-تستی
