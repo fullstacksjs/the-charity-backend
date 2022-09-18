@@ -24,7 +24,7 @@ model Admin {
 model Family {
   id String @id @default(cuid()) @db.VarChar(32)
 
-  name   String       @db.VarChar(100) // the reason to choose 100 as name length limit: https://stackoverflow.com/questions/20958/list-of-standard-lengths-for-database-fields (adding first_name + last_name)
+  name   String
   slug   String       @unique @db.VarChar(255)
   status FamilyStatus @default(DRAFT)
 

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "family" ALTER COLUMN "name" SET DATA TYPE TEXT;
