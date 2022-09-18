@@ -10,9 +10,9 @@ generator client {
 // reason to use singular name for table names: https://stackoverflow.com/questions/338156/table-naming-dilemma-singular-vs-plural-names
 
 model Admin {
-  id String @id @default(cuid())
+  id String @id @default(cuid()) @db.VarChar(32)
 
-  username String @unique
+  username String @unique @db.VarChar(60)
   password String
 
   created_at DateTime @default(now())
@@ -22,10 +22,10 @@ model Admin {
 }
 
 model Family {
-  id String @id @default(cuid())
+  id String @id @default(cuid()) @db.VarChar(32)
 
-  name   String
-  slug   String       @unique
+  name   String       @db.VarChar(100) // the reason to choose 100 as name length limit: https://stackoverflow.com/questions/20958/list-of-standard-lengths-for-database-fields (adding first_name + last_name)
+  slug   String       @unique @db.VarChar(255)
   status FamilyStatus @default(DRAFT)
 
   created_at DateTime @default(now())
