@@ -4,5 +4,5 @@
     "cspell --no-must-find-files"
   ],
   "*.ts": ["eslint --fix", "cspell --no-must-find-files"],
-  "*.prisma": ["npx --no-install prisma format", "cspell --no-must-find-files"]
+  "*.prisma": ["npx --no-install prisma format"]
 }
