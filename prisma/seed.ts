@@ -40,7 +40,7 @@ async function main() {
     description: faker.lorem.sentence(3),
   };
   await prisma.project.create({ data: testProject });
-  console.log('New Project added');
+  console.log(`The project created, The project name is "${testProject.name}"`);
 }
 
 main()
