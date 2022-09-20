@@ -42,7 +42,7 @@ enum FamilyStatus {
 model Project {
   id String @id @default(cuid()) @db.VarChar(32)
 
-  name        String  @db.VarChar(32)
+  name        String  @db.VarChar(255)
   description String?
 
   status ProjectStatus @default(PLANNING)
