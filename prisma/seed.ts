@@ -34,6 +34,13 @@ async function main() {
       `test family created, test family name is "${testFamily.name}"`,
     );
   }
+
+  const testProject = {
+    name: faker.lorem.word(5),
+    description: faker.lorem.sentence(3),
+  };
+  await prisma.project.create({ data: testProject });
+  console.log(`The project created, The project name is "${testProject.name}"`);
 }
 
 main()
