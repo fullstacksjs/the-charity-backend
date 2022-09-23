@@ -1,3 +1,4 @@
+import { Env } from '@fullstacksjs/toolbox';
 import type { ApolloDriverConfig } from '@nestjs/apollo';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -22,6 +23,10 @@ const mocks = {
 export class GraphQLConfigService implements GqlOptionsFactory {
   constructor(private configService: ConfigService<EnvironmentVariables>) {}
   createGqlOptions(): ApolloDriverConfig {
+    const isDev = Env.isDev;
+    // https://www.debuggex.com/r/XTrC-yG2Yeq2_sAm
+    const originAsRegex = /https?:\/\/[a-z0-9\-_]+-fullstacks\.vercel\.app/;
+
     return {
       playground: false,
       debug: true,
@@ -30,12 +35,12 @@ export class GraphQLConfigService implements GqlOptionsFactory {
       resolvers: { Money, IBAN },
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       introspection: this.configService.get('INTROSPECTION_ENABLED'),
-      //   cors: {
-      //     // TODO: origin should be moved into configModule - not sure regex is valid!
-      //     // https://www.debuggex.com/r/XTrC-yG2Yeq2_sAm
-      //     origin: /https?:\/\/[a-z0-9\-_]+-fullstacks\.vercel\.app/,
-      //     credentials: true,
-      //   },
+      cors: {
+        origin: isDev
+          ? [originAsRegex, 'https://studio.apollographql.com/sandbox']
+          : originAsRegex,
+        credentials: true,
+      },
     };
   }
 }
