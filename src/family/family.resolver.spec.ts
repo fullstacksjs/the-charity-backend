@@ -9,7 +9,13 @@ describe('FamilyResolver', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FamilyResolver, FamilyService],
+      providers: [
+        FamilyResolver,
+        {
+          provide: FamilyService,
+          useValue: {},
+        },
+      ],
     }).compile();
 
     resolver = module.get<FamilyResolver>(FamilyResolver);
