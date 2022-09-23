@@ -21,6 +21,7 @@
     "prepare": "./scripts/prepare"
   },
   "dependencies": {
+    "@fullstacksjs/toolbox": "2.19.0",
     "@nestjs/apollo": "10.1.0",
     "@nestjs/common": "9.0.11",
     "@nestjs/config": "2.2.0",
@@ -41,7 +42,6 @@
   "devDependencies": {
     "@faker-js/faker": "7.5.0",
     "@fullstacksjs/eslint-config": "8.7.2",
-    "@fullstacksjs/toolbox": "2.19.0",
     "@fullstacksjs/tsconfig": "0.6.0",
     "@nestjs/cli": "9.1.1",
     "@nestjs/schematics": "9.0.1",
