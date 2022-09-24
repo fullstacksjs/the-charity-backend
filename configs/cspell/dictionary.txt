@@ -9,3 +9,5 @@ Mehrie
 typecheck
 Procfile
 fullstacks
+pactum
+lcov
