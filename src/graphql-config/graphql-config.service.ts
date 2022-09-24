@@ -7,17 +7,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 
 import type { EnvironmentVariables } from '../configuration/EnvironmentVariables';
 import { IBAN, Money } from '../shared/scalars';
-
-const mocks = {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  DateTime: () => {
-    return new Date();
-  },
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  String: () => {
-    return 'string-mock';
-  },
-};
+import { scalerMocks } from './scalerMocks';
 
 @Injectable()
 export class GraphQLConfigService implements GqlOptionsFactory {
@@ -26,19 +16,18 @@ export class GraphQLConfigService implements GqlOptionsFactory {
     const isDev = Env.isDev;
     // https://www.debuggex.com/r/XTrC-yG2Yeq2_sAm
     const originAsRegex = /https?:\/\/[a-z0-9\-_]+-fullstacks\.vercel\.app/;
+    const apolloSandbox = 'https://studio.apollographql.com/sandbox';
 
     return {
       playground: false,
       debug: true,
-      mocks,
+      mocks: scalerMocks,
       autoSchemaFile: true,
       resolvers: { Money, IBAN },
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       introspection: this.configService.get('INTROSPECTION_ENABLED'),
       cors: {
-        origin: isDev
-          ? [originAsRegex, 'https://studio.apollographql.com/sandbox']
-          : originAsRegex,
+        origin: isDev ? [originAsRegex, apolloSandbox] : originAsRegex,
         credentials: true,
       },
     };
