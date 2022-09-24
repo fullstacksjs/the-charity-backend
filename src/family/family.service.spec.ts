@@ -45,16 +45,16 @@ describe('FamilyService', () => {
 
     it('should return null: no family found', async () => {
       jest.spyOn(prisma.family, 'findUnique').mockResolvedValue(null);
-      const foundedFamily = await service.findFamilyById('familyId');
+      const family = await service.findFamilyById('familyId');
 
-      expect(foundedFamily).toBeNull();
+      expect(family).toBeNull();
     });
 
     it('should return unique family', async () => {
       jest.spyOn(prisma.family, 'findUnique').mockResolvedValue(familyStub);
-      const foundedFamily = await service.findFamilyById('familyId');
+      const family = await service.findFamilyById('familyId');
 
-      expect(foundedFamily).toEqual(familyStub);
+      expect(family).toEqual(familyStub);
     });
   });
 });
