@@ -93,4 +93,47 @@ describe('family Query', () => {
 
     await prisma.family.delete({ where: { id: family.id } });
   });
+
+  it("Should return a draft family from the DB when it's exists", async () => {
+    const family = await prisma.family.create({
+      data: {
+        name: faker.name.firstName(),
+        slug: faker.name.firstName(),
+        status: FamilyStatus.Draft,
+      },
+    });
+
+    const query = gql`
+      query {
+        family(id: "${family.id}") {
+          ... on DraftFamily {
+            id
+            draftName: name
+            slug
+            status
+          }
+          ... on CompletedFamily {
+            id
+            completedName: name
+            slug
+            status
+          }
+        }
+      }
+    `;
+
+    const result = await apolloServer.executeOperation({ query });
+
+    expect(result.errors).toBeFalsy();
+    expect(result.data).toBeTruthy();
+    expect(result.data?.['family']).toBeTruthy();
+    expect(result.data?.['family']).toMatchObject({
+      draftName: family.name,
+      status: 'Draft',
+      slug: family.slug,
+      id: family.id,
+    });
+
+    await prisma.family.delete({ where: { id: family.id } });
+  });
 });
