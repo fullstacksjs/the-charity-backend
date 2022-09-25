@@ -9,6 +9,27 @@ jobs:
   verify:
     concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          
+        ports:
+          - 5432:5432
+
+        env:
+          POSTGRES_PASSWORD: postgres
+
+    env:
+      INTROSPECTION_ENABLED: true
+      PORT: 8080
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
     steps:
       - uses: actions/checkout@v3
       - uses: volta-cli/action@v3
@@ -27,3 +48,6 @@ jobs:
 
       - name: Unit Test
         run: npx --no-install jest --ci
+
+      - name: E2E Test
+        run: npx --no-install jest --config ./e2e/jest-e2e.json --ci
