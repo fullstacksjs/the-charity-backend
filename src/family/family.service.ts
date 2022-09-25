@@ -11,7 +11,7 @@ export class FamilyService {
     return `This action returns a families`;
   }
 
-  findFamilyById(id: string): Promise<Family | null> {
+  findById(id: string): Promise<Family | null> {
     return this.prisma.family.findUnique({
       where: {
         id,

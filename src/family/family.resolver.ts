@@ -14,6 +14,6 @@ export class FamilyResolver {
 
   @Query(() => Family, { name: 'family' })
   findOne(@Args('id', { type: () => Int }) id: string) {
-    return this.familyService.findFamilyById(id);
+    return this.familyService.findById(id);
   }
 }

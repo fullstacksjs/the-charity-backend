@@ -33,26 +33,26 @@ describe('FamilyService', () => {
   describe('findFamilyById', () => {
     it('should be defined', () => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(service.findFamilyById).toBeDefined();
+      expect(service.findById).toBeDefined();
     });
 
     it('should called with', async () => {
-      const test = jest.spyOn(service, 'findFamilyById');
-      await service.findFamilyById('familyId');
+      const test = jest.spyOn(service, 'findById');
+      await service.findById('familyId');
 
       expect(test).toHaveBeenCalledWith('familyId');
     });
 
     it('should return null: no family found', async () => {
       jest.spyOn(prisma.family, 'findUnique').mockResolvedValue(null);
-      const family = await service.findFamilyById('familyId');
+      const family = await service.findById('familyId');
 
       expect(family).toBeNull();
     });
 
     it('should return unique family', async () => {
       jest.spyOn(prisma.family, 'findUnique').mockResolvedValue(familyStub);
-      const family = await service.findFamilyById('familyId');
+      const family = await service.findById('familyId');
 
       expect(family).toEqual(familyStub);
     });
