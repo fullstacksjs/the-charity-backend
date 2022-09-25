@@ -6,5 +6,5 @@
     "outDir": "./dist",
     "emitDecoratorMetadata": true
   },
-  "include": ["src", "e2e", "prisma", "@types"]
+  "include": ["src", "prisma", "@types"]
 }
