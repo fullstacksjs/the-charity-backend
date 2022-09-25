@@ -1,11 +1,14 @@
 import { createUnionType } from '@nestjs/graphql';
+import { FamilyStatus } from '@prisma/client';
 
-import { CompleteFamily } from './complete-family.entity';
+import { CompletedFamily } from './completed-family.entity';
 import { DraftFamily } from './draft-family.entity';
 
 export const Family = createUnionType({
   name: 'family',
   description: 'family = [ draft-family, complete-family ]',
-  types: () => [DraftFamily, CompleteFamily] as const,
+  resolveType: value =>
+    value.status === FamilyStatus.COMPLETE ? CompletedFamily : DraftFamily,
+  types: () => [DraftFamily, CompletedFamily] as const,
 });
 export type Family = typeof Family;

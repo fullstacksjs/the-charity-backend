@@ -16,7 +16,6 @@ function graphqlRequest(query: string) {
 }
 
 describe('Smoke', () => {
-  // eslint-disable-next-line fp/no-let
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -31,15 +30,15 @@ describe('Smoke', () => {
     pactum.request.setBaseUrl(baseUrl);
   });
 
+  afterAll(async () => {
+    await app.close();
+  });
+
   it('Should be able to fetch the schema', async () => {
     const query = `query { __schema { types { description } } }`;
 
     await graphqlRequest(query).expectJsonMatch({
       data: { __schema: { types: eachLike({ description: any() }) } },
     });
-  });
-
-  afterAll(async () => {
-    await app.close();
   });
 });

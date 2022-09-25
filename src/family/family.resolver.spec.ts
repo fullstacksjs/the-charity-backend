@@ -1,27 +1,96 @@
-import type { TestingModule } from '@nestjs/testing';
+import { faker } from '@faker-js/faker';
+import type { INestApplication } from '@nestjs/common';
+import { GraphQLSchemaHost } from '@nestjs/graphql';
 import { Test } from '@nestjs/testing';
+import type { PrismaClient } from '@prisma/client';
+import { ApolloServer, gql } from 'apollo-server-express';
 
-import { FamilyResolver } from './family.resolver';
-import { FamilyService } from './family.service';
+import { AppModule } from '../app.module';
+import { PrismaService } from '../prisma/prisma.service';
+import { FamilyStatus } from './entities/family-status.enum';
 
-describe('FamilyResolver', () => {
-  let resolver: FamilyResolver;
+describe('family Query', () => {
+  let app: INestApplication;
+  let apolloServer: ApolloServer;
+  let prisma: PrismaClient;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        FamilyResolver,
-        {
-          provide: FamilyService,
-          useValue: {},
-        },
-      ],
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [AppModule],
     }).compile();
 
-    resolver = module.get<FamilyResolver>(FamilyResolver);
+    app = moduleRef.createNestApplication();
+    await app.init();
+    const { schema } = app.get(GraphQLSchemaHost);
+    apolloServer = new ApolloServer({ schema });
+    prisma = app.get(PrismaService);
   });
 
-  it('should be defined', () => {
-    expect(resolver).toBeDefined();
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('Should return null for an invalid id', async () => {
+    const query = gql`
+      query {
+        family(id: "1") {
+          ... on DraftFamily {
+            id
+          }
+          ... on CompletedFamily {
+            id
+          }
+        }
+      }
+    `;
+
+    const result = await apolloServer.executeOperation({ query });
+
+    expect(result.errors).toBeFalsy();
+    expect(result.data).toBeTruthy();
+    expect(result.data?.['family']).toBeNull();
+  });
+
+  it("Should return a completed family from the DB when it's exists", async () => {
+    const family = await prisma.family.create({
+      data: {
+        name: faker.name.firstName(),
+        slug: faker.name.firstName(),
+        status: FamilyStatus.Completed,
+      },
+    });
+
+    const query = gql`
+      query {
+        family(id: "${family.id}") {
+          ... on DraftFamily {
+            id
+            draftName: name
+            slug
+            status
+          }
+          ... on CompletedFamily {
+            id
+            completedName: name
+            slug
+            status
+          }
+        }
+      }
+    `;
+
+    const result = await apolloServer.executeOperation({ query });
+
+    expect(result.errors).toBeFalsy();
+    expect(result.data).toBeTruthy();
+    expect(result.data?.['family']).toBeTruthy();
+    expect(result.data?.['family']).toMatchObject({
+      completedName: family.name,
+      status: 'Completed',
+      slug: family.slug,
+      id: family.id,
+    });
+
+    await prisma.family.delete({ where: { id: family.id } });
   });
 });

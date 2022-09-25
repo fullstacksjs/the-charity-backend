@@ -11,7 +11,7 @@
     "debug": "dotenv -e .development.env nest start --debug --watch",
     "lint:ci": "eslint . --ext .ts",
     "lint": "npm run lint:ci -- --fix",
-    "test": "dotenv -e .test.env jest",
+    "test": "dotenv -e .test.env -- jest",
     "test:watch": "npm run test -- --watch",
     "test:debug": "dotenv node -e .test.env --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "migrate": "dotenv -e .development.env -- prisma migrate dev",
@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "7.5.0",
-    "@fullstacksjs/eslint-config": "8.7.2",
+    "@fullstacksjs/eslint-config": "8.7.3",
     "@fullstacksjs/tsconfig": "0.6.0",
     "@nestjs/cli": "9.1.1",
     "@nestjs/schematics": "9.0.1",

@@ -3,7 +3,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { DraftFamily } from './draft-family.entity';
 
 @ObjectType()
-export class CompleteFamily extends DraftFamily {
+export class CompletedFamily extends DraftFamily {
   @Field()
   declare name: string;
 
