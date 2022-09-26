@@ -1,5 +1,6 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
+import { ProjectStatus } from '@prisma/client';
 import type { MockProxy } from 'jest-mock-extended';
 import { mockDeep } from 'jest-mock-extended';
 
@@ -48,14 +49,35 @@ describe('ProjectService', () => {
       expect(method).toHaveBeenCalled();
     });
 
-    it('should create a new project', async () => {
+    it('should create a new project without optional fields', async () => {
       const data: CreateProjectInput = { name: 'test' };
-      jest.spyOn(prisma.project, 'create').mockResolvedValue(projectStub);
+      jest
+        .spyOn(prisma.project, 'create')
+        .mockResolvedValue({ ...projectStub, ...data });
       const project = await service.createOne(data);
 
-      expect(project).toHaveProperty('name');
-      expect(project.description).toBeNull();
-      expect(project.status).not.toBeNull();
+      expect(project).toMatchObject({
+        ...data,
+        description: null,
+        status: ProjectStatus.PLANNING,
+      });
+    });
+
+    // eslint-disable-next-line jest/no-focused-tests
+    it('should create a new project with optional fields', async () => {
+      const data: CreateProjectInput = {
+        name: 'test',
+        description: 'SOME DESC',
+      };
+      jest
+        .spyOn(prisma.project, 'create')
+        .mockResolvedValue({ ...projectStub, ...data });
+      const project = await service.createOne(data);
+
+      expect(project).toMatchObject({
+        ...data,
+        status: ProjectStatus.PLANNING,
+      });
     });
   });
 });

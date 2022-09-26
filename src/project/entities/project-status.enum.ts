@@ -9,5 +9,5 @@ export enum ProjectStatus {
 
 registerEnumType(ProjectStatus, {
   name: 'ProjectStatus',
-  description: 'current status of project ',
+  description: 'current status of project - default [PLANNING] ',
 });
