@@ -43,6 +43,9 @@ jobs:
       - name: Spell Check
         run: npm run spell
 
+      - name: DB Migration
+        run: npm run migrate
+
       - name: Build
         run: npm run build
 

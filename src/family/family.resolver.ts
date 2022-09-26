@@ -1,4 +1,4 @@
-import { Args, Int, Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 
 import { Family } from './entities/family.entity';
 import { FamilyService } from './family.service';
@@ -12,8 +12,8 @@ export class FamilyResolver {
     return this.familyService.findAll();
   }
 
-  @Query(() => Family, { name: 'family' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.familyService.findOne(id);
+  @Query(() => Family, { name: 'family', nullable: true })
+  findOne(@Args('id', { type: () => String }) id: string) {
+    return this.familyService.findById(id);
   }
 }

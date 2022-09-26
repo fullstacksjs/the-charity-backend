@@ -1,12 +1,18 @@
 import type { INestApplication, OnModuleInit } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
+
+import type { EnvironmentVariables } from '../configuration';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-  constructor() {
+  constructor(
+    private readonly configService: ConfigService<EnvironmentVariables>,
+  ) {
+    const logLevel = configService.get('PRISMA_LOG_LEVEL');
     super({
-      log: ['info'],
+      log: logLevel ? [logLevel] : undefined,
     });
   }
 

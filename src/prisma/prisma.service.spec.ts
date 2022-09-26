@@ -1,4 +1,4 @@
-/* eslint-disable fp/no-let */
+import { ConfigModule } from '@nestjs/config';
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 
@@ -10,6 +10,7 @@ describe('PrismaService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [PrismaService],
+      imports: [ConfigModule],
     }).compile();
 
     service = module.get<PrismaService>(PrismaService);
