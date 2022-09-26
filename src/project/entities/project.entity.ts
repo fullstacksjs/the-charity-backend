@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-import { Family } from '../../family/entities/family.entity';
+import { ProjectStatus } from './project-status.enum';
 
 @ObjectType()
 export class Project {
@@ -10,6 +10,15 @@ export class Project {
   @Field()
   declare name: string;
 
-  @Field(() => [Family])
-  declare families: Family[];
+  @Field({ nullable: true })
+  declare description?: string;
+
+  @Field(() => ProjectStatus, { defaultValue: ProjectStatus.PLANNING })
+  declare status: ProjectStatus;
+
+  @Field()
+  declare updated_at: Date;
+
+  @Field()
+  declare created_at: Date;
 }

@@ -1,13 +1,6 @@
-import {
-  Args,
-  Int,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { Family } from '../family/entities/family.entity';
+import { CreateProjectInput } from './dto/create-project.dto';
 import { Project } from './entities/project.entity';
 import { ProjectService } from './project.service';
 
@@ -25,8 +18,8 @@ export class ProjectResolver {
     return this.projectService.findOne(id);
   }
 
-  @ResolveField('families', () => [Family])
-  findFamilies(@Parent() project: Project) {
-    this.projectService.findAllFamilies(project.id);
+  @Mutation(() => Project, { name: 'project' })
+  createOne(@Args('input') data: CreateProjectInput) {
+    return this.projectService.createOne(data);
   }
 }
