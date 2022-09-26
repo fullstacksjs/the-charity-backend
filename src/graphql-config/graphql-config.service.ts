@@ -16,7 +16,7 @@ export class GraphQLConfigService implements GqlOptionsFactory {
     const isDev = Env.isDev;
     // https://www.debuggex.com/r/XTrC-yG2Yeq2_sAm
     const originAsRegex = /https?:\/\/[a-z0-9\-_]+-fullstacks\.vercel\.app/;
-    const apolloSandbox = 'https://studio.apollographql.com/sandbox';
+    const apolloSandbox = 'https://studio.apollographql.com';
 
     return {
       playground: false,
