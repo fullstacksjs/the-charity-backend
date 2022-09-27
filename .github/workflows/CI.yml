@@ -13,13 +13,11 @@ jobs:
     services:
       postgres:
         image: postgres:13
-        
+
         options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s
           --health-retries 5
-          
+
         ports:
           - 5432:5432
 
@@ -34,23 +32,14 @@ jobs:
       - uses: actions/checkout@v3
       - uses: volta-cli/action@v3
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
-      - name: Lint and Format
-        run: npm run lint:ci
+      - run: npm run lint:ci
+      - run: npm run spell
 
-      - name: Spell Check
-        run: npm run spell
+      - run: npm run migrate
+      - run: npx prisma generate
+      - run: npm run build
 
-      - name: DB Migration
-        run: npm run migrate
-
-      - name: Build
-        run: npm run build
-
-      - name: Unit Test
-        run: npx --no-install jest --ci
-
-      - name: E2E Test
-        run: npx --no-install jest --config ./e2e/jest-e2e.json --ci
+      - run: npx --no-install jest --ci
+      - run: npx --no-install jest --config ./e2e/jest-e2e.json --ci
