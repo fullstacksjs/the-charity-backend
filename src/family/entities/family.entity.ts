@@ -8,7 +8,7 @@ export const Family = createUnionType({
   name: 'family',
   description: 'family = [ draft-family, complete-family ]',
   resolveType: value =>
-    value.status === FamilyStatus.COMPLETE ? CompletedFamily : DraftFamily,
+    value.status === FamilyStatus.COMPLETED ? CompletedFamily : DraftFamily,
   types: () => [DraftFamily, CompletedFamily] as const,
 });
 export type Family = typeof Family;

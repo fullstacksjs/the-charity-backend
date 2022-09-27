@@ -2,7 +2,7 @@ import { registerEnumType } from '@nestjs/graphql';
 
 export enum FamilyStatus {
   Draft = 'DRAFT',
-  Completed = 'COMPLETE',
+  Completed = 'COMPLETED',
 }
 
 registerEnumType(FamilyStatus, {
