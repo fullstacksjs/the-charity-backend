@@ -5,5 +5,7 @@ export interface EnvironmentVariables {
   PORT: number;
   DATABASE_URL: string;
   INTROSPECTION_ENABLED: boolean;
-  PRISMA_LOG_LEVEL: 'error' | 'info' | 'query' | 'warn';
+  PRISMA_LOG_LEVEL: string;
 }
+
+export type EnvKeys = keyof EnvironmentVariables;
