@@ -51,6 +51,12 @@ describe('Project Query', () => {
         query,
         variables: { input },
       });
+      const project = await prisma.project.findUnique({
+        where: { id: result.data?.['project'].id },
+      });
+
+      expect(project).toBeTruthy();
+      expect(project).toMatchObject(input);
 
       expect(result.errors).toBeFalsy();
       expect(result.data).toBeTruthy();
@@ -89,6 +95,13 @@ describe('Project Query', () => {
         variables: { input },
       });
 
+      const project = await prisma.project.findUnique({
+        where: { id: result.data?.['project'].id },
+      });
+
+      expect(project).toBeTruthy();
+      expect(project).toMatchObject(input);
+
       expect(result.errors).toBeFalsy();
       expect(result.data).toBeTruthy();
       expect(result.data?.['project']).toBeTruthy();
@@ -103,7 +116,7 @@ describe('Project Query', () => {
     });
 
     it('Should throw error for required fields', async () => {
-      const input = { description: 'SOME-DESC' };
+      const input = { description: 'SOME-DESC2' };
       const query = gql`
         mutation Project($input: CreateProjectInput!) {
           project(input: $input) {
@@ -122,6 +135,11 @@ describe('Project Query', () => {
         variables: { input },
       });
 
+      const project = await prisma.project.findFirst({
+        where: { ...input },
+      });
+
+      expect(project).toBeFalsy();
       expect(result.errors).toBeTruthy();
       expect(result.data).toBeUndefined();
     });
