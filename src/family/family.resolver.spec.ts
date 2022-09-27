@@ -56,7 +56,7 @@ describe('family Query', () => {
       data: {
         name: faker.name.firstName(),
         slug: faker.name.firstName(),
-        status: FamilyStatus.Completed,
+        status: FamilyStatus.COMPLETED,
       },
     });
 
@@ -86,7 +86,7 @@ describe('family Query', () => {
     expect(result.data?.['family']).toBeTruthy();
     expect(result.data?.['family']).toMatchObject({
       completedName: family.name,
-      status: 'Completed',
+      status: 'COMPLETED',
       slug: family.slug,
       id: family.id,
     });
@@ -99,7 +99,7 @@ describe('family Query', () => {
       data: {
         name: faker.name.firstName(),
         slug: faker.name.firstName(),
-        status: FamilyStatus.Draft,
+        status: FamilyStatus.DRAFT,
       },
     });
 
@@ -129,7 +129,7 @@ describe('family Query', () => {
     expect(result.data?.['family']).toBeTruthy();
     expect(result.data?.['family']).toMatchObject({
       draftName: family.name,
-      status: 'Draft',
+      status: 'DRAFT',
       slug: family.slug,
       id: family.id,
     });
