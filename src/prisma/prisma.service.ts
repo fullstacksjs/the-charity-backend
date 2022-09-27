@@ -7,9 +7,7 @@ import type { EnvironmentVariables } from '../configuration';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-  constructor(
-    private readonly configService: ConfigService<EnvironmentVariables>,
-  ) {
+  constructor(configService: ConfigService<EnvironmentVariables>) {
     const logLevel = configService.get('PRISMA_LOG_LEVEL');
     super({
       log: logLevel ? [logLevel] : undefined,
