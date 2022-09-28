@@ -2,7 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app.module';
-import type { Config, NestConfig } from './configuration/interface';
+import type { Config, ServerConfig } from './configuration';
 import { PrismaService } from './prisma/prisma.service';
 
 async function bootstrap() {
@@ -13,7 +13,7 @@ async function bootstrap() {
 
   prismaService.enableShutdownHook(app);
 
-  const { port } = configService.get<NestConfig>('nest');
+  const { port } = configService.get<ServerConfig>('server');
 
   await app.listen(port);
 }

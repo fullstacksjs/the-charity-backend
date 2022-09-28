@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import type { GqlOptionsFactory } from '@nestjs/graphql';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 
-import type { Config, GraphqlConfig } from '../configuration/interface';
+import type { Config, GraphqlConfig } from '../configuration';
 import { IBAN, Money } from '../shared/scalars';
 import { scalerMocks } from './scalerMocks';
 

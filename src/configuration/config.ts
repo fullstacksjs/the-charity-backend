@@ -1,33 +1,32 @@
-import { getEnv as getBaseEnv, toInteger } from '@fullstacksjs/toolbox';
+import { Env, getEnv as getBaseEnv, toInteger } from '@fullstacksjs/toolbox';
 
-import type { EnvKeys } from './EnvironmentVariables';
-import type { Config } from './interface/config.interface';
+import type { Config } from './config.interface';
+import type { EnvKeys } from './config.schema';
 
 const getEnv = getBaseEnv<EnvKeys>;
 
 const config: Config = {
-  nest: {
+  server: {
     port: toInteger(getEnv('PORT', '3000')),
-    prismaLogLevel: getEnv('PRISMA_LOG_LEVEL', 'info') as
-      | 'error'
-      | 'info'
-      | 'query'
-      | 'warn',
+  },
+
+  prisma: {
+    logLevel: getEnv('PRISMA_LOG_LEVEL')?.split(
+      ',',
+    ) as Config['prisma']['logLevel'],
   },
 
   graphql: {
-    debug: true,
-    introspection: Boolean(getEnv('INTROSPECTION_ENABLED', 'true')),
+    debug: Env.isDev,
+    introspection: Boolean(getEnv('INTROSPECTION_ENABLED')),
     playgroundEnabled: false,
 
     cors: {
       credentials: true,
-
-      // https://www.debuggex.com/r/XTrC-yG2Yeq2_sAm
       originAsRegex: /https?:\/\/[a-z0-9\-_]+-fullstacks\.vercel\.app/,
       apolloSandboxOrigin: 'https://studio.apollographql.com',
     },
   },
 };
 
-export default (): Config => config;
+export default () => config;

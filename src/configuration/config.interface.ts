@@ -1,11 +1,17 @@
 export interface Config {
-  nest: NestConfig;
+  server: ServerConfig;
   graphql: GraphqlConfig;
+  prisma: PrismaConfig;
 }
 
-export interface NestConfig {
+export type PrismaLogLevel = 'error' | 'info' | 'query' | 'warn';
+
+export interface ServerConfig {
   port: number;
-  prismaLogLevel: 'error' | 'info' | 'query' | 'warn';
+}
+
+export interface PrismaConfig {
+  logLevel: PrismaLogLevel[] | undefined;
 }
 
 export interface GraphqlConfig {

@@ -1,8 +1,13 @@
 import Joi from 'joi';
 
-import type { EnvironmentVariables } from './EnvironmentVariables';
+export type EnvKeys =
+  | 'DATABASE_URL'
+  | 'INTROSPECTION_ENABLED'
+  | 'NODE_ENV'
+  | 'PORT'
+  | 'PRISMA_LOG_LEVEL';
 
-const schema = Joi.object<EnvironmentVariables>({
+export const configSchema = Joi.object<Record<EnvKeys, string>>({
   /* eslint-disable @typescript-eslint/naming-convention */
   NODE_ENV: Joi.string()
     .valid('production')
@@ -13,7 +18,7 @@ const schema = Joi.object<EnvironmentVariables>({
   DATABASE_URL: Joi.string()
     .uri({ scheme: ['postgres', 'postgresql'] })
     .required(),
-  INTROSPECTION_ENABLED: Joi.boolean().default(false).required(),
+  INTROSPECTION_ENABLED: Joi.boolean().default(false),
   PRISMA_LOG_LEVEL: Joi.string()
     .valid('error')
     .valid('info')
@@ -21,5 +26,3 @@ const schema = Joi.object<EnvironmentVariables>({
     .valid('warn'),
   /* eslint-enable @typescript-eslint/naming-convention */
 });
-
-export default schema;
