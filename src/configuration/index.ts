@@ -1,1 +1,1 @@
-export * from './EnvironmentVariables';
+export * from './config.interface';

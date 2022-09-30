@@ -5,27 +5,27 @@ import { ConfigService } from '@nestjs/config';
 import type { GqlOptionsFactory } from '@nestjs/graphql';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 
-import type { EnvironmentVariables } from '../configuration/EnvironmentVariables';
+import type { Config, GraphqlConfig } from '../configuration';
 import { IBAN, Money } from '../shared/scalars';
 import { scalerMocks } from './scalerMocks';
 
 @Injectable()
 export class GraphQLConfigService implements GqlOptionsFactory {
-  constructor(private configService: ConfigService<EnvironmentVariables>) {}
+  constructor(private configService: ConfigService<Config, true>) {}
   createGqlOptions(): ApolloDriverConfig {
     const isDev = Env.isDev;
-    // https://www.debuggex.com/r/XTrC-yG2Yeq2_sAm
-    const originAsRegex = /https?:\/\/[a-z0-9\-_]+-fullstacks\.vercel\.app/;
-    const apolloSandbox = 'https://studio.apollographql.com';
+    const graphqlConfig = this.configService.get<GraphqlConfig>('graphql');
+    const originAsRegex = graphqlConfig.cors.originAsRegex;
+    const apolloSandbox = graphqlConfig.cors.apolloSandboxOrigin;
 
     return {
-      playground: false,
-      debug: true,
+      playground: graphqlConfig.playgroundEnabled,
+      debug: graphqlConfig.debug,
       mocks: scalerMocks,
       autoSchemaFile: true,
       resolvers: { Money, IBAN },
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      introspection: this.configService.get('INTROSPECTION_ENABLED'),
+      introspection: graphqlConfig.introspection,
       cors: {
         origin: isDev ? [originAsRegex, apolloSandbox] : originAsRegex,
         credentials: true,

@@ -1,7 +1,7 @@
-import { ConfigModule } from '@nestjs/config';
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 
+import { ConfigurationModule } from '../configuration/configuration.module';
 import { GraphQLConfigService } from './graphql-config.service';
 
 describe('GqlConfigService', () => {
@@ -9,7 +9,7 @@ describe('GqlConfigService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ConfigModule],
+      imports: [ConfigurationModule],
       providers: [GraphQLConfigService],
     }).compile();
 

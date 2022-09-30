@@ -3,17 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 
-import type { EnvironmentVariables } from '../configuration';
+import type { Config, PrismaConfig } from '../configuration';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-  constructor(
-    private readonly configService: ConfigService<EnvironmentVariables>,
-  ) {
-    const logLevel = configService.get('PRISMA_LOG_LEVEL');
-    super({
-      log: logLevel ? [logLevel] : undefined,
-    });
+  constructor(configService: ConfigService<Config>) {
+    const config = configService.get<PrismaConfig>('prisma');
+    super({ log: config?.logLevel });
   }
 
   async onModuleInit() {

@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 
 import { AdminModule } from './admin/admin.module';
-import validationSchema from './configuration/validation';
+import { ConfigurationModule } from './configuration/configuration.module';
 import { DependentModule } from './dependent/dependent.module';
 import { FamilyModule } from './family/family.module';
 import { GraphQLConfigModule } from './graphql-config/graphql-config.module';
@@ -12,11 +11,7 @@ import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      cache: false,
-      isGlobal: true,
-      validationSchema,
-    }),
+    ConfigurationModule,
     GraphQLConfigModule,
     ProjectModule,
     FamilyModule,
