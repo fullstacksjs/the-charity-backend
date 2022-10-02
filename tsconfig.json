@@ -4,7 +4,8 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "outDir": "./dist",
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false
   },
   "include": ["src", "e2e", "prisma", "@types"]
 }

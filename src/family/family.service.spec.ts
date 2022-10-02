@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import type { MockProxy } from 'jest-mock-extended';
@@ -55,6 +56,33 @@ describe('FamilyService', () => {
       const family = await service.findById('familyId');
 
       expect(family).toEqual(familyStub);
+    });
+  });
+
+  describe('createFamily', () => {
+    it('should be defined', () => {
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(service.create).toBeDefined();
+    });
+
+    it('should called with correct argument', async () => {
+      const test = jest.spyOn(service, 'create');
+
+      const family = { name: faker.name.fullName() };
+
+      await service.create(family);
+
+      expect(test).toHaveBeenCalledWith(family);
+    });
+
+    it('should throw unrecognized error', async () => {
+      jest
+        .spyOn(prisma.family, 'create')
+        .mockRejectedValueOnce(new Error('Wrong Input'));
+
+      await expect(
+        service.create({ name: faker.name.fullName() }),
+      ).rejects.toThrow();
     });
   });
 });

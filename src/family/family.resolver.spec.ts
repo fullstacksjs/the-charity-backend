@@ -4,11 +4,13 @@ import { GraphQLSchemaHost } from '@nestjs/graphql';
 import { Test } from '@nestjs/testing';
 import type { PrismaClient } from '@prisma/client';
 import { ApolloServer, gql } from 'apollo-server-express';
+import slug from 'slug';
 
 import { AppModule } from '../app.module';
 import { PrismaService } from '../prisma/prisma.service';
 import { FamilyStatus } from './entities/family-status.enum';
 
+// eslint-disable-next-line max-lines-per-function
 describe('family Query', () => {
   let app: INestApplication;
   let apolloServer: ApolloServer;
@@ -135,5 +137,49 @@ describe('family Query', () => {
     });
 
     await prisma.family.delete({ where: { id: family.id } });
+  });
+
+  it('should create family and returns it', async () => {
+    const familyName = faker.name.fullName();
+
+    const query = gql`mutation { createFamily(data: { name: "${familyName}" }) { ... on DraftFamily { id status } } }`;
+
+    const result = await apolloServer.executeOperation({ query });
+
+    expect(result.errors).toBeFalsy();
+    expect(result.data).toBeTruthy();
+    expect(result.data?.['createFamily']?.status).toBe(FamilyStatus.DRAFT);
+    expect(result.data?.['createFamily']?.id).toBeTruthy();
+
+    await prisma.family.delete({
+      where: { id: result.data?.['createFamily']?.id },
+    });
+  });
+
+  it('should create two family with same name and different slug', async () => {
+    const familyName = 'some random big name which does not exist really';
+    const familySlug = slug(familyName);
+
+    const query = gql`mutation { createFamily(data: { name: "${familyName}" }) { ... on DraftFamily { slug } } }`;
+
+    const firstRequestResult = await apolloServer.executeOperation({ query });
+    const secondRequestResult = await apolloServer.executeOperation({
+      query,
+    });
+
+    const firstSlug = firstRequestResult.data?.['createFamily']?.slug;
+    const secondSlug = secondRequestResult.data?.['createFamily']?.slug;
+
+    expect(firstSlug).toBeTruthy();
+    expect(secondSlug).toBeTruthy();
+    expect(firstSlug).not.toEqual(secondSlug);
+
+    await prisma.family.deleteMany({
+      where: {
+        slug: {
+          startsWith: familySlug,
+        },
+      },
+    });
   });
 });
