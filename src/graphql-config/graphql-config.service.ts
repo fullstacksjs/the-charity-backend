@@ -7,7 +7,6 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 
 import type { Config, GraphqlConfig } from '../configuration';
 import { IBAN, Money } from '../shared/scalars';
-import { scalerMocks } from './scalerMocks';
 
 @Injectable()
 export class GraphQLConfigService implements GqlOptionsFactory {
@@ -21,7 +20,7 @@ export class GraphQLConfigService implements GqlOptionsFactory {
     return {
       playground: graphqlConfig.playgroundEnabled,
       debug: graphqlConfig.debug,
-      mocks: scalerMocks,
+      mocks: false,
       autoSchemaFile: true,
       resolvers: { Money, IBAN },
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
