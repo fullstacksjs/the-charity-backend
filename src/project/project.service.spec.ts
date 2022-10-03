@@ -5,7 +5,7 @@ import type { MockProxy } from 'jest-mock-extended';
 import { mockDeep } from 'jest-mock-extended';
 
 import { PrismaService } from '../prisma/prisma.service';
-import type { CreateProjectInput } from './dto/create-project.dto';
+import type { CreateProjectInput } from './dto/input';
 import { ProjectService } from './project.service';
 import { projectStub } from './stubs';
 

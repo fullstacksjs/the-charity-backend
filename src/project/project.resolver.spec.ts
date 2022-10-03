@@ -6,7 +6,7 @@ import { ApolloServer, gql } from 'apollo-server-express';
 
 import { AppModule } from '../app.module';
 import { PrismaService } from '../prisma/prisma.service';
-import type { CreateProjectInput } from './dto/create-project.dto';
+import type { CreateProjectInput } from './dto/input';
 import { ProjectStatus } from './entities/project-status.enum';
 
 // eslint-disable-next-line max-lines-per-function
