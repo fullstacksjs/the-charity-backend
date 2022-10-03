@@ -142,7 +142,7 @@ describe('family Query', () => {
   it('should create family and returns it', async () => {
     const familyName = faker.name.fullName();
 
-    const query = gql`mutation { createFamily(data: { name: "${familyName}" }) { ... on DraftFamily { id status } } }`;
+    const query = gql`mutation { createFamily(input: { name: "${familyName}" }) { ... on DraftFamily { id status } } }`;
 
     const result = await apolloServer.executeOperation({ query });
 
@@ -160,7 +160,7 @@ describe('family Query', () => {
     const familyName = 'some random big name which does not exist really';
     const familySlug = slug(familyName);
 
-    const query = gql`mutation { createFamily(data: { name: "${familyName}" }) { ... on DraftFamily { slug } } }`;
+    const query = gql`mutation { createFamily(input: { name: "${familyName}" }) { ... on DraftFamily { slug } } }`;
 
     const firstRequestResult = await apolloServer.executeOperation({ query });
     const secondRequestResult = await apolloServer.executeOperation({

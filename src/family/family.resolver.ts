@@ -19,7 +19,7 @@ export class FamilyResolver {
   }
 
   @Mutation(() => Family)
-  createFamily(@Args('data') createFamilyInput: CreateFamilyInput) {
+  createFamily(@Args('input') createFamilyInput: CreateFamilyInput) {
     return this.familyService.create({ name: createFamilyInput.name });
   }
 }
