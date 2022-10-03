@@ -15,7 +15,7 @@ export class ProjectService {
     return '';
   }
 
-  createOne(data: CreateProjectInput) {
+  create(data: CreateProjectInput) {
     return this.prisma.project.create({ data });
   }
 }

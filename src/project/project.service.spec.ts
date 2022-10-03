@@ -32,10 +32,10 @@ describe('ProjectService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('createOne', () => {
+  describe('create', () => {
     it('should be defined', () => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(service.createOne).toBeDefined();
+      expect(service.create).toBeDefined();
     });
 
     it('should called with', async () => {
@@ -43,7 +43,7 @@ describe('ProjectService', () => {
       const method = jest
         .spyOn(prisma.project, 'create')
         .mockResolvedValue(projectStub);
-      await service.createOne(data);
+      await service.create(data);
 
       // eslint-disable-next-line jest/prefer-called-with
       expect(method).toHaveBeenCalled();
@@ -54,7 +54,7 @@ describe('ProjectService', () => {
       jest
         .spyOn(prisma.project, 'create')
         .mockResolvedValue({ ...projectStub, ...data });
-      const project = await service.createOne(data);
+      const project = await service.create(data);
 
       expect(project).toMatchObject({
         ...data,
@@ -72,7 +72,7 @@ describe('ProjectService', () => {
       jest
         .spyOn(prisma.project, 'create')
         .mockResolvedValue({ ...projectStub, ...data });
-      const project = await service.createOne(data);
+      const project = await service.create(data);
 
       expect(project).toMatchObject({
         ...data,

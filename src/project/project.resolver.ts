@@ -18,8 +18,8 @@ export class ProjectResolver {
     return this.projectService.findOne(id);
   }
 
-  @Mutation(() => Project, { name: 'project' })
-  createOne(@Args('input') data: CreateProjectInput) {
-    return this.projectService.createOne(data);
+  @Mutation(() => Project, { name: 'createProject' })
+  create(@Args('input') data: CreateProjectInput) {
+    return this.projectService.create(data);
   }
 }
