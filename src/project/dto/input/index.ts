@@ -1,1 +1,1 @@
-export * from './create-project.input';
+export * from './create-project-input.dto';
