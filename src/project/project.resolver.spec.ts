@@ -31,95 +31,12 @@ describe('Project Query', () => {
     await app.close();
   });
 
-  describe('Create One', () => {
+  describe('Create', () => {
     it('Should create a project without optional fields', async () => {
       const input: CreateProjectInput = { name: 'new name' };
       const query = gql`
-        mutation Project($input: CreateProjectInput!) {
-          project(input: $input) {
-            id
-            name
-            description
-            status
-            updated_at
-            created_at
-          }
-        }
-      `;
-
-      const result = await apolloServer.executeOperation({
-        query,
-        variables: { input },
-      });
-      const project = await prisma.project.findUnique({
-        where: { id: result.data?.['project'].id },
-      });
-
-      expect(project).toBeTruthy();
-      expect(project).toMatchObject(input);
-
-      expect(result.errors).toBeFalsy();
-      expect(result.data).toBeTruthy();
-      expect(result.data?.['project']).toBeTruthy();
-      expect(result.data?.['project']).toMatchObject({
-        ...input,
-        status: ProjectStatus.PLANNING,
-        description: null,
-      });
-
-      await prisma.project.delete({
-        where: { id: result.data?.['project'].id },
-      });
-    });
-
-    it('Should create a project with optional fields', async () => {
-      const input: CreateProjectInput = {
-        name: 'new name',
-        description: 'SOME-DESC',
-      };
-      const query = gql`
-        mutation Project($input: CreateProjectInput!) {
-          project(input: $input) {
-            id
-            name
-            description
-            status
-            updated_at
-            created_at
-          }
-        }
-      `;
-
-      const result = await apolloServer.executeOperation({
-        query,
-        variables: { input },
-      });
-
-      const project = await prisma.project.findUnique({
-        where: { id: result.data?.['project'].id },
-      });
-
-      expect(project).toBeTruthy();
-      expect(project).toMatchObject(input);
-
-      expect(result.errors).toBeFalsy();
-      expect(result.data).toBeTruthy();
-      expect(result.data?.['project']).toBeTruthy();
-      expect(result.data?.['project']).toMatchObject({
-        ...input,
-        status: ProjectStatus.PLANNING,
-      });
-
-      await prisma.project.delete({
-        where: { id: result.data?.['project'].id },
-      });
-    });
-
-    it('Should throw error for required fields', async () => {
-      const input = { description: 'SOME-DESC2' };
-      const query = gql`
-        mutation Project($input: CreateProjectInput!) {
-          project(input: $input) {
+        mutation createProject($input: CreateProjectInput!) {
+          createProject(input: $input) {
             id
             name
             description
@@ -136,10 +53,92 @@ describe('Project Query', () => {
       });
 
       const project = await prisma.project.findFirst({
-        where: { ...input },
+        where: { id: result.data?.['createProject'].id },
       });
 
-      expect(project).toBeFalsy();
+      expect(project).toBeTruthy();
+      expect(project).toMatchObject(input);
+
+      expect(result.errors).toBeFalsy();
+      expect(result.data).toBeTruthy();
+      expect(result.data?.['createProject']).toBeTruthy();
+      expect(result.data?.['createProject']).toMatchObject({
+        ...input,
+        status: ProjectStatus.PLANNING,
+        description: null,
+      });
+
+      await prisma.project.delete({
+        where: { id: result.data?.['createProject'].id },
+      });
+    });
+
+    it('Should create a project with optional fields', async () => {
+      const input: CreateProjectInput = {
+        name: 'new name',
+        description: 'SOME-DESC',
+      };
+      const query = gql`
+        mutation createProject($input: CreateProjectInput!) {
+          createProject(input: $input) {
+            id
+            name
+            description
+            status
+            updated_at
+            created_at
+          }
+        }
+      `;
+
+      const result = await apolloServer.executeOperation({
+        query,
+        variables: { input },
+      });
+
+      const project = await prisma.project.findUnique({
+        where: { id: result.data?.['createProject'].id },
+      });
+
+      expect(project).toBeTruthy();
+      expect(project).toMatchObject(input);
+
+      expect(result.errors).toBeFalsy();
+      expect(result.data).toBeTruthy();
+      expect(result.data?.['createProject']).toBeTruthy();
+      expect(result.data?.['createProject']).toMatchObject({
+        ...input,
+        status: ProjectStatus.PLANNING,
+      });
+
+      await prisma.project.delete({
+        where: { id: result.data?.['createProject'].id },
+      });
+    });
+
+    it('Should throw error for required fields', async () => {
+      const input = { description: 'SOME-DESC2' };
+      const query = gql`
+        mutation createProject($input: CreateProjectInput!) {
+          createProject(input: $input) {
+            id
+            name
+            description
+            status
+            updated_at
+            created_at
+          }
+        }
+      `;
+
+      const result = await apolloServer.executeOperation({
+        query,
+        variables: { input },
+      });
+
+      const project = await prisma.project.findFirst();
+
+      expect(project).toBeNull();
       expect(result.errors).toBeTruthy();
       expect(result.data).toBeUndefined();
     });

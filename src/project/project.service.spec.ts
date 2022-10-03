@@ -45,8 +45,7 @@ describe('ProjectService', () => {
         .mockResolvedValue(projectStub);
       await service.create(data);
 
-      // eslint-disable-next-line jest/prefer-called-with
-      expect(method).toHaveBeenCalled();
+      expect(method).toHaveBeenCalledWith({ data });
     });
 
     it('should create a new project without optional fields', async () => {
