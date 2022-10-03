@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { CreateFamilyInput } from './dto/create-family.input';
+import { CreateFamilyInput } from './dto/input/create-family.input';
 import { Family } from './entities/family.entity';
 import { FamilyService } from './family.service';
 

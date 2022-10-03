@@ -4,7 +4,7 @@ import * as pactum from 'pactum';
 import { any, eachLike } from 'pactum-matchers';
 
 import { AppModule } from '../src/app.module';
-import { graphqlRequest } from '../src/shared';
+import { graphqlRequest } from './lib';
 
 describe('Smoke', () => {
   let app: INestApplication;
