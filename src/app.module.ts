@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
+import { APP_PIPE } from '@nestjs/core';
 
 import { AdminModule } from './admin/admin.module';
 import { ConfigurationModule } from './configuration/configuration.module';
@@ -20,5 +21,6 @@ import { ProjectModule } from './project/project.module';
     AdminModule,
     PrismaModule,
   ],
+  providers: [{ provide: APP_PIPE, useClass: ValidationPipe }],
 })
 export class AppModule {}

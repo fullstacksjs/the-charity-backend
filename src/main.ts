@@ -1,4 +1,3 @@
-import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 
@@ -15,8 +14,6 @@ async function bootstrap() {
   prismaService.enableShutdownHook(app);
 
   const { port } = configService.get<ServerConfig>('server');
-
-  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(port);
 }
