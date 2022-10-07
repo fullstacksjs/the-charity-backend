@@ -80,13 +80,15 @@ describe('FamilyService', () => {
     });
 
     it('should throw unrecognized error', async () => {
+      const errorMessage = 'Wrong Input';
+
       jest
         .spyOn(prisma.family, 'create')
-        .mockRejectedValue(new Error('Wrong Input'));
+        .mockRejectedValue(new Error(errorMessage));
 
       await expect(
         service.create({ name: faker.name.fullName() }),
-      ).rejects.toThrow();
+      ).rejects.toThrow(errorMessage);
     });
   });
 });
