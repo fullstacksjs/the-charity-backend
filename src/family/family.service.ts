@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import type { Family } from '@prisma/client';
+import { nanoid } from 'nanoid';
 import slug from 'slug';
 
 import { PrismaService } from '../prisma/prisma.service';
@@ -30,32 +31,20 @@ export class FamilyService {
       slug: familySlug,
     };
 
-    // eslint-disable-next-line fp/no-let
-    let family: Family | null = null;
-    // eslint-disable-next-line fp/no-let
-    let counter = 0;
+    const isFamilyExists = await this.prisma.family.count({
+      where: { slug: familySlug },
+    });
 
-    // eslint-disable-next-line fp/no-loops
-    while (!family) {
-      try {
-        if (counter !== 0) {
-          extendedData.slug = `${familySlug}-${counter}`;
-        }
-
-        // eslint-disable-next-line no-await-in-loop
-        family = await this.prisma.family.create({
-          data: extendedData,
-        });
-      } catch (error: any) {
-        if (error?.code === 'P2002' && error?.meta?.target?.includes('slug')) {
-          counter++;
-        } else {
-          this.logger.error({ errorOnCreateFamily: error });
-          throw error;
-        }
-      }
+    if (isFamilyExists) {
+      extendedData.slug = `${familySlug}-${nanoid(5)}`;
     }
 
-    return family;
+    try {
+      const family = await this.prisma.family.create({ data: extendedData });
+      return family;
+    } catch (error) {
+      this.logger.error({ errorOnCreateFamily: error });
+      throw error;
+    }
   }
 }
