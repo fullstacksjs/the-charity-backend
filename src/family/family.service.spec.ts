@@ -90,5 +90,12 @@ describe('FamilyService', () => {
         service.create({ name: faker.name.fullName() }),
       ).rejects.toThrow(errorMessage);
     });
+
+    it('should return created family', async () => {
+      jest.spyOn(prisma.family, 'create').mockResolvedValue(familyStub);
+      const family = await service.create({ name: familyStub.name });
+
+      expect(family).toEqual(familyStub);
+    });
   });
 });
