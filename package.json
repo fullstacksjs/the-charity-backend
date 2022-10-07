@@ -42,7 +42,8 @@
     "pactum": "3.2.2",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
-    "rxjs": "7.5.6"
+    "rxjs": "7.5.6",
+    "slug": "8.2.2"
   },
   "devDependencies": {
     "@faker-js/faker": "7.5.0",
@@ -54,6 +55,7 @@
     "@types/express": "4.17.13",
     "@types/jest": "29.0.0",
     "@types/node": "18.7.14",
+    "@types/slug": "5.0.3",
     "@types/supertest": "2.0.12",
     "cspell": "6.8.1",
     "dotenv-cli": "6.0.0",
