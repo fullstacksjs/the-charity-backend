@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import type { Prisma } from '@prisma/client';
+import type { Family, Prisma } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
 import argon2 from 'argon2';
 import { nanoid } from 'nanoid';
@@ -29,7 +29,7 @@ async function main() {
   });
 
   // eslint-disable-next-line fp/no-let
-  let family;
+  let family: Family;
   if (!isTestFamilyExists) {
     family = await prisma.family.create({ data: testFamily });
     console.log(
@@ -39,20 +39,33 @@ async function main() {
     family = isTestFamilyExists;
   }
 
-  const testProject = {
-    name: faker.lorem.word(5),
-    description: faker.lorem.sentence(3),
-  };
-  await prisma.project.create({ data: testProject });
-  console.log(`The project created, The project name is "${testProject.name}"`);
+  const isTestProjectExists = await prisma.project.findFirst();
+  if (!isTestProjectExists) {
+    const testProject = {
+      name: faker.lorem.word(5),
+      description: faker.lorem.sentence(3),
+    };
+    await prisma.project.create({ data: testProject });
+    console.log(
+      `The project created, The project name is "${testProject.name}"`,
+    );
+  }
 
-  const testMember = { name: faker.name.fullName() };
-  await prisma.member.create({
-    data: { ...testMember, family: { connect: { id: family.id } } },
-  });
-  console.log(
-    `The member create, test member name is ${testMember.name} with family name ${family.name}`,
-  );
+  const isTestMemberExits = await prisma.member.findFirst();
+  if (!isTestMemberExits) {
+    const testMembers = [
+      { name: faker.name.fullName(), familyId: family.id },
+      { name: faker.name.fullName(), familyId: family.id },
+      { name: faker.name.fullName(), familyId: family.id },
+      { name: faker.name.fullName(), familyId: family.id },
+    ];
+    await prisma.member.createMany({ data: testMembers });
+    testMembers.map(member =>
+      console.log(
+        `The member created, test member name is ${member.name} with ${family.name} family name`,
+      ),
+    );
+  }
 }
 
 main()
