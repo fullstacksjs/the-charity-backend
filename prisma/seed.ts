@@ -39,6 +39,18 @@ async function main() {
     family = isTestFamilyExists;
   }
 
+  const testHouseholder = { name: faker.name.fullName() };
+  const isTestHouseholderExits = await prisma.houseHolder.findFirst();
+
+  if (!isTestHouseholderExits) {
+    await prisma.houseHolder.create({
+      data: { ...testHouseholder, familyId: family.id },
+    });
+    console.log(
+      `The householder created, test householder name is ${testHouseholder.name} and she/he is ${family.name} householder`,
+    );
+  }
+
   const isTestProjectExists = await prisma.project.findFirst();
   if (!isTestProjectExists) {
     const testProject = {
