@@ -28,11 +28,15 @@ async function main() {
     where: { slug: testFamily.slug },
   });
 
+  // eslint-disable-next-line fp/no-let
+  let family;
   if (!isTestFamilyExists) {
-    await prisma.family.create({ data: testFamily });
+    family = await prisma.family.create({ data: testFamily });
     console.log(
       `test family created, test family name is "${testFamily.name}"`,
     );
+  } else {
+    family = isTestFamilyExists;
   }
 
   const testProject = {
@@ -41,6 +45,14 @@ async function main() {
   };
   await prisma.project.create({ data: testProject });
   console.log(`The project created, The project name is "${testProject.name}"`);
+
+  const testMember = { name: faker.name.fullName() };
+  await prisma.member.create({
+    data: { ...testMember, family: { connect: { id: family.id } } },
+  });
+  console.log(
+    `The member create, test member name is ${testMember.name} with family name ${family.name}`,
+  );
 }
 
 main()
