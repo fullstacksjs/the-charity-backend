@@ -21,6 +21,20 @@ model Admin {
   @@map("admin")
 }
 
+model Member {
+  id String @id @default(cuid()) @db.VarChar(32)
+
+  name String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  family   Family @relation(fields: [familyId], references: [id])
+  familyId String @db.VarChar(32)
+
+  @@map("member")
+}
+
 model Family {
   id String @id @default(cuid()) @db.VarChar(32)
 
@@ -30,6 +44,7 @@ model Family {
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  Member     Member[]
 
   @@map("family")
 }
