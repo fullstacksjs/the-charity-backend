@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import type { Prisma } from '@prisma/client';
+import type { Family, Prisma } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
 import argon2 from 'argon2';
 import { nanoid } from 'nanoid';
@@ -28,19 +28,44 @@ async function main() {
     where: { slug: testFamily.slug },
   });
 
+  // eslint-disable-next-line fp/no-let
+  let family: Family;
   if (!isTestFamilyExists) {
-    await prisma.family.create({ data: testFamily });
+    family = await prisma.family.create({ data: testFamily });
     console.log(
       `test family created, test family name is "${testFamily.name}"`,
     );
+  } else {
+    family = isTestFamilyExists;
   }
 
-  const testProject = {
-    name: faker.lorem.word(5),
-    description: faker.lorem.sentence(3),
-  };
-  await prisma.project.create({ data: testProject });
-  console.log(`The project created, The project name is "${testProject.name}"`);
+  const isTestProjectExists = await prisma.project.findFirst();
+  if (!isTestProjectExists) {
+    const testProject = {
+      name: faker.lorem.word(5),
+      description: faker.lorem.sentence(3),
+    };
+    await prisma.project.create({ data: testProject });
+    console.log(
+      `The project created, The project name is "${testProject.name}"`,
+    );
+  }
+
+  const isTestMemberExits = await prisma.member.findFirst();
+  if (!isTestMemberExits) {
+    const testMembers = [
+      { name: faker.name.fullName(), family_id: family.id },
+      { name: faker.name.fullName(), family_id: family.id },
+      { name: faker.name.fullName(), family_id: family.id },
+      { name: faker.name.fullName(), family_id: family.id },
+    ];
+    await prisma.member.createMany({ data: testMembers });
+    testMembers.map(member =>
+      console.log(
+        `The member created, test member name is ${member.name} with ${family.name} family name`,
+      ),
+    );
+  }
 }
 
 main()
