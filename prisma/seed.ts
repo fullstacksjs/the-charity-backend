@@ -44,7 +44,7 @@ async function main() {
 
   if (!isTestHouseholderExits) {
     await prisma.householder.create({
-      data: { ...testHouseholder, familyId: family.id },
+      data: { ...testHouseholder, family_id: family.id },
     });
     console.log(
       `The householder created, test householder name is ${testHouseholder.name} and she/he is ${family.name} householder`,
