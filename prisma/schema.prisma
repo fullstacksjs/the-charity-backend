@@ -29,8 +29,8 @@ model Member {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  family   Family @relation(fields: [familyId], references: [id])
-  familyId String @db.VarChar(32)
+  family    Family @relation(fields: [family_id], references: [id])
+  family_id String @db.VarChar(32)
 
   @@map("member")
 }

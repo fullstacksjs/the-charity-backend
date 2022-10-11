@@ -54,10 +54,10 @@ async function main() {
   const isTestMemberExits = await prisma.member.findFirst();
   if (!isTestMemberExits) {
     const testMembers = [
-      { name: faker.name.fullName(), familyId: family.id },
-      { name: faker.name.fullName(), familyId: family.id },
-      { name: faker.name.fullName(), familyId: family.id },
-      { name: faker.name.fullName(), familyId: family.id },
+      { name: faker.name.fullName(), family_id: family.id },
+      { name: faker.name.fullName(), family_id: family.id },
+      { name: faker.name.fullName(), family_id: family.id },
+      { name: faker.name.fullName(), family_id: family.id },
     ];
     await prisma.member.createMany({ data: testMembers });
     testMembers.map(member =>
