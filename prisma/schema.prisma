@@ -35,6 +35,20 @@ model Member {
   @@map("member")
 }
 
+model Householder {
+  id String @id @default(cuid()) @db.VarChar(32)
+
+  name String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  family    Family @relation(fields: [family_id], references: [id])
+  family_id String @unique @db.VarChar(32)
+
+  @@map("householder")
+}
+
 model Family {
   id String @id @default(cuid()) @db.VarChar(32)
 
@@ -44,7 +58,9 @@ model Family {
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  members    Member[]
+
+  members     Member[]
+  householder Householder?
 
   @@map("family")
 }

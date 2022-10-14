@@ -14,33 +14,46 @@ async function main() {
     password: hashedPassword,
   };
 
-  const isAdminExists = await prisma.admin.count({
+  const adminCounts = await prisma.admin.count({
     where: { username: adminCreateInput.username },
   });
 
-  if (!isAdminExists) {
-    await prisma.admin.create({ data: adminCreateInput, select: null });
+  if (adminCounts) {
+    await prisma.admin.create({ data: adminCreateInput });
     console.log('the admin password is:', originalPassword);
   }
 
   const testFamily = { slug: 'test-family', name: faker.name.fullName() };
-  const isTestFamilyExists = await prisma.family.findFirst({
+  const existedFamily = await prisma.family.findFirst({
     where: { slug: testFamily.slug },
   });
 
   // eslint-disable-next-line fp/no-let
   let family: Family;
-  if (!isTestFamilyExists) {
+  if (!existedFamily) {
     family = await prisma.family.create({ data: testFamily });
     console.log(
       `test family created, test family name is "${testFamily.name}"`,
     );
   } else {
-    family = isTestFamilyExists;
+    family = existedFamily;
   }
 
-  const isTestProjectExists = await prisma.project.findFirst();
-  if (!isTestProjectExists) {
+  const existedHouseholder = await prisma.householder.findFirst();
+
+  if (existedHouseholder) {
+    const testHouseholder = {
+      name: faker.name.fullName(),
+      family_id: family.id,
+    };
+    await prisma.householder.create({ data: testHouseholder });
+    console.log(
+      `The householder created, test householder name is ${testHouseholder.name} and she/he is ${family.name} householder`,
+    );
+  }
+
+  const projectCounts = await prisma.project.count();
+  if (projectCounts) {
     const testProject = {
       name: faker.lorem.word(5),
       description: faker.lorem.sentence(3),
@@ -51,8 +64,8 @@ async function main() {
     );
   }
 
-  const isTestMemberExits = await prisma.member.findFirst();
-  if (!isTestMemberExits) {
+  const membersCounts = await prisma.member.count();
+  if (membersCounts) {
     const testMembers = [
       { name: faker.name.fullName(), family_id: family.id },
       { name: faker.name.fullName(), family_id: family.id },
@@ -60,7 +73,7 @@ async function main() {
       { name: faker.name.fullName(), family_id: family.id },
     ];
     await prisma.member.createMany({ data: testMembers });
-    testMembers.map(member =>
+    testMembers.forEach(member =>
       console.log(
         `The member created, test member name is ${member.name} with ${family.name} family name`,
       ),
