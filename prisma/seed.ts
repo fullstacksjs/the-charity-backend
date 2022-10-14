@@ -30,7 +30,7 @@ async function main() {
 
   // eslint-disable-next-line fp/no-let
   let family: Family;
-  if (existedFamily === null) {
+  if (!existedFamily) {
     family = await prisma.family.create({ data: testFamily });
     console.log(
       `test family created, test family name is "${testFamily.name}"`,
