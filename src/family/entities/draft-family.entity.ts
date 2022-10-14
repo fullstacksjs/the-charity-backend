@@ -11,7 +11,7 @@ export class DraftFamily {
   declare id: string;
 
   @Field()
-  declare code: number;
+  declare code: string;
 
   @Field(() => FamilyStatus)
   declare status: FamilyStatus;

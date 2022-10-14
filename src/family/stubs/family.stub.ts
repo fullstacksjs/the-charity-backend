@@ -6,7 +6,7 @@ export const familyStub: Family = {
   name: faker.name.fullName(),
   status: 'DRAFT',
   severity: 'NORMAL',
-  code: Math.floor(Math.random() * 100_000),
+  code: `F${Math.floor(Math.random() * 100_000)}`,
   created_at: faker.date.recent(),
   updated_at: faker.date.future(),
 };

@@ -53,7 +53,7 @@ model Family {
   id String @id @default(cuid()) @db.VarChar(32)
 
   name     String
-  code     Int            @default(autoincrement())
+  code     String         @db.VarChar(6)
   status   FamilyStatus   @default(DRAFT)
   severity FamilySeverity @default(NORMAL)
 

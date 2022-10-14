@@ -58,6 +58,7 @@ describe('Family Queries', () => {
       data: {
         name: faker.name.firstName(),
         status: FamilyStatus.COMPLETED,
+        code: 'F99999',
       },
     });
 
@@ -97,6 +98,7 @@ describe('Family Queries', () => {
       data: {
         name: faker.name.firstName(),
         status: FamilyStatus.DRAFT,
+        code: 'F99999',
       },
     });
 
@@ -127,7 +129,7 @@ describe('Family Queries', () => {
     expect(result.data?.['family']).toMatchObject({
       draftName: family.name,
       status: 'DRAFT',
-      code: expect.any(Number),
+      code: expect.any(String),
       id: family.id,
     });
 

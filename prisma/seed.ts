@@ -23,7 +23,7 @@ async function main() {
     console.log('the admin password is:', originalPassword);
   }
 
-  const testFamily = { code: 99999, name: faker.name.fullName() };
+  const testFamily = { code: 'F00001', name: faker.name.fullName() };
   const existedFamily = await prisma.family.findFirst({
     where: { code: testFamily.code },
   });

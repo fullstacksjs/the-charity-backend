@@ -24,7 +24,23 @@ export class FamilyService {
 
   async create(data: CreateFamilyInput): Promise<Family> {
     try {
-      const family = await this.prisma.family.create({ data });
+      const lastCreatedFamily = await this.prisma.family.findFirst({
+        orderBy: { created_at: 'desc' },
+        select: {
+          code: true,
+        },
+      });
+
+      const codeNumber = lastCreatedFamily
+        ? parseInt(lastCreatedFamily.code.replace(/^\D+/g, ''), 10) + 1
+        : 1;
+
+      const extendedData = {
+        ...data,
+        code: `F${String(codeNumber).padStart(5, '0')}`,
+      };
+
+      const family = await this.prisma.family.create({ data: extendedData });
       return family;
     } catch (error) {
       this.logger.error({ errorOnCreateFamily: error });

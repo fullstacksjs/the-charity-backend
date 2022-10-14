@@ -5,14 +5,4 @@ export enum FamilySeverity {
   CRITICAL = 'CRITICAL',
 }
 
-registerEnumType(FamilySeverity, {
-  name: 'FamilySeverity',
-  valuesMap: {
-    NORMAL: {
-      description: 'FamilySeverity is normal.',
-    },
-    CRITICAL: {
-      description: 'FamilySeverity is critical.',
-    },
-  },
-});
+registerEnumType(FamilySeverity, { name: 'FamilySeverity' });

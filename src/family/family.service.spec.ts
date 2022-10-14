@@ -74,7 +74,7 @@ describe('FamilyService', () => {
       await service.create(data);
 
       expect(method).toHaveBeenCalledWith({
-        data,
+        data: { ...data, code: expect.any(String) },
       });
     });
 
