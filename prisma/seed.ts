@@ -18,7 +18,7 @@ async function main() {
     where: { username: adminCreateInput.username },
   });
 
-  if (adminCounts < 1) {
+  if (adminCounts) {
     await prisma.admin.create({ data: adminCreateInput });
     console.log('the admin password is:', originalPassword);
   }
@@ -41,7 +41,7 @@ async function main() {
 
   const existedHouseholder = await prisma.householder.findFirst();
 
-  if (existedHouseholder === null) {
+  if (existedHouseholder) {
     const testHouseholder = {
       name: faker.name.fullName(),
       family_id: family.id,
@@ -53,7 +53,7 @@ async function main() {
   }
 
   const projectCounts = await prisma.project.count();
-  if (projectCounts < 1) {
+  if (projectCounts) {
     const testProject = {
       name: faker.lorem.word(5),
       description: faker.lorem.sentence(3),
@@ -65,7 +65,7 @@ async function main() {
   }
 
   const membersCounts = await prisma.member.count();
-  if (membersCounts < 1) {
+  if (membersCounts) {
     const testMembers = [
       { name: faker.name.fullName(), family_id: family.id },
       { name: faker.name.fullName(), family_id: family.id },
