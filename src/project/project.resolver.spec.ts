@@ -32,7 +32,7 @@ describe('Project Query', () => {
   });
 
   describe('Create', () => {
-    it('Should create a project without optional fields', async () => {
+    it('should create a project without optional fields', async () => {
       const input: CreateProjectInput = { name: 'new name' };
       const query = gql`
         mutation createProject($input: CreateProjectInput!) {
@@ -73,7 +73,7 @@ describe('Project Query', () => {
       });
     });
 
-    it('Should create a project with optional fields', async () => {
+    it('should create a project with optional fields', async () => {
       const input: CreateProjectInput = {
         name: 'new name',
         description: 'SOME-DESC',
@@ -116,7 +116,7 @@ describe('Project Query', () => {
       });
     });
 
-    it('Should throw error for required fields', async () => {
+    it('should throw error for required fields', async () => {
       const input = { description: 'SOME-DESC2' };
       const query = gql`
         mutation createProject($input: CreateProjectInput!) {

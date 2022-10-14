@@ -3,7 +3,6 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import type { MockProxy } from 'jest-mock-extended';
 import { mockDeep } from 'jest-mock-extended';
-import slug from 'slug';
 
 import { PrismaService } from '../prisma/prisma.service';
 import type { CreateFamilyInput } from './dto/input/create-family-input.dto';
@@ -75,7 +74,7 @@ describe('FamilyService', () => {
       await service.create(data);
 
       expect(method).toHaveBeenCalledWith({
-        data: { ...data, slug: slug(data.name) },
+        data,
       });
     });
 

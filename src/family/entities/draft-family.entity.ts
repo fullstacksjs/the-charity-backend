@@ -2,6 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { Dependent } from '../../dependent/entities/dependent.entity';
 import { Project } from '../../project/entities/project.entity';
+import { FamilySeverity } from './family-severity.enum';
 import { FamilyStatus } from './family-status.enum';
 
 @ObjectType()
@@ -10,10 +11,13 @@ export class DraftFamily {
   declare id: string;
 
   @Field()
-  declare slug: string;
+  declare code: number;
 
   @Field(() => FamilyStatus)
   declare status: FamilyStatus;
+
+  @Field(() => FamilySeverity)
+  declare severity: FamilySeverity;
 
   @Field({ nullable: true })
   declare name?: string;
