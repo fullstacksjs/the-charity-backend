@@ -3,5 +3,5 @@ export function extractCodeNumberFromFamilyCode(familyCode: string): number {
 }
 
 export function convertCodeNumberToFamilyCode(codeNumber: number): string {
-  return `${String(codeNumber).padStart(5, '0')}`;
+  return `F${String(codeNumber).padStart(5, '0')}`;
 }

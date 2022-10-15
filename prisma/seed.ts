@@ -4,6 +4,8 @@ import { PrismaClient } from '@prisma/client';
 import argon2 from 'argon2';
 import { nanoid } from 'nanoid';
 
+import { convertCodeNumberToFamilyCode } from '../src/utils';
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -23,7 +25,10 @@ async function main() {
     console.log('the admin password is:', originalPassword);
   }
 
-  const testFamily = { code: 'F00001', name: faker.name.fullName() };
+  const testFamily = {
+    code: convertCodeNumberToFamilyCode(1),
+    name: faker.name.fullName(),
+  };
   const existedFamily = await prisma.family.findFirst({
     where: { code: testFamily.code },
   });
