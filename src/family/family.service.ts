@@ -2,6 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import type { Family } from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
+import {
+  convertCodeNumberToFamilyCode,
+  extractCodeNumberFromFamilyCode,
+} from '../utils';
 import type { CreateFamilyInput } from './dto/input/create-family-input.dto';
 
 @Injectable()
@@ -32,12 +36,12 @@ export class FamilyService {
       });
 
       const codeNumber = lastCreatedFamily
-        ? parseInt(lastCreatedFamily.code.replace(/^\D+/g, ''), 10) + 1
+        ? extractCodeNumberFromFamilyCode(lastCreatedFamily.code) + 1
         : 1;
 
       const extendedData = {
         ...data,
-        code: `F${String(codeNumber).padStart(5, '0')}`,
+        code: convertCodeNumberToFamilyCode(codeNumber),
       };
 
       const family = await this.prisma.family.create({ data: extendedData });

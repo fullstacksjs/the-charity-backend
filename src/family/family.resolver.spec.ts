@@ -8,6 +8,7 @@ import { ApolloServer, gql } from 'apollo-server-express';
 
 import { AppModule } from '../app.module';
 import { PrismaService } from '../prisma/prisma.service';
+import { convertCodeNumberToFamilyCode } from '../utils';
 import { FamilyStatus } from './entities/family-status.enum';
 
 // eslint-disable-next-line max-lines-per-function
@@ -58,7 +59,7 @@ describe('Family Queries', () => {
       data: {
         name: faker.name.firstName(),
         status: FamilyStatus.COMPLETED,
-        code: 'F99999',
+        code: convertCodeNumberToFamilyCode(99999),
       },
     });
 
@@ -98,7 +99,7 @@ describe('Family Queries', () => {
       data: {
         name: faker.name.firstName(),
         status: FamilyStatus.DRAFT,
-        code: 'F99999',
+        code: convertCodeNumberToFamilyCode(99999),
       },
     });
 
