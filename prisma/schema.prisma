@@ -52,9 +52,10 @@ model Householder {
 model Family {
   id String @id @default(cuid()) @db.VarChar(32)
 
-  name   String
-  slug   String       @unique @db.VarChar(255)
-  status FamilyStatus @default(DRAFT)
+  name     String
+  code     String         @db.VarChar(6)
+  status   FamilyStatus   @default(DRAFT)
+  severity FamilySeverity @default(NORMAL)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -62,6 +63,7 @@ model Family {
   members     Member[]
   householder Householder?
 
+  @@index([code])
   @@map("family")
 }
 
@@ -89,4 +91,9 @@ enum ProjectStatus {
   IN_PROGRESS
   SUSPENDED
   DONE
+}
+
+enum FamilySeverity {
+  NORMAL
+  CRITICAL
 }

@@ -4,6 +4,8 @@ import { PrismaClient } from '@prisma/client';
 import argon2 from 'argon2';
 import { nanoid } from 'nanoid';
 
+import { convertCodeNumberToFamilyCode } from '../src/utils';
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -18,14 +20,17 @@ async function main() {
     where: { username: adminCreateInput.username },
   });
 
-  if (adminCounts) {
+  if (!adminCounts) {
     await prisma.admin.create({ data: adminCreateInput });
     console.log('the admin password is:', originalPassword);
   }
 
-  const testFamily = { slug: 'test-family', name: faker.name.fullName() };
+  const testFamily = {
+    code: convertCodeNumberToFamilyCode(1),
+    name: faker.name.fullName(),
+  };
   const existedFamily = await prisma.family.findFirst({
-    where: { slug: testFamily.slug },
+    where: { code: testFamily.code },
   });
 
   // eslint-disable-next-line fp/no-let
@@ -53,7 +58,7 @@ async function main() {
   }
 
   const projectCounts = await prisma.project.count();
-  if (projectCounts) {
+  if (!projectCounts) {
     const testProject = {
       name: faker.lorem.word(5),
       description: faker.lorem.sentence(3),
@@ -65,7 +70,7 @@ async function main() {
   }
 
   const membersCounts = await prisma.member.count();
-  if (membersCounts) {
+  if (!membersCounts) {
     const testMembers = [
       { name: faker.name.fullName(), family_id: family.id },
       { name: faker.name.fullName(), family_id: family.id },

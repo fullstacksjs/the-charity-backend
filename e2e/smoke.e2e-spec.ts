@@ -34,7 +34,7 @@ describe('Smoke', () => {
     await app.close();
   });
 
-  it('Should be able to fetch the schema', async () => {
+  it('should be able to fetch the schema', async () => {
     const query = `query { __schema { types { description } } }`;
 
     await graphqlRequest(query).expectJsonMatch({

@@ -1,9 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import type { Family } from '@prisma/client';
-import { nanoid } from 'nanoid';
-import slug from 'slug';
 
 import { PrismaService } from '../prisma/prisma.service';
+import {
+  convertCodeNumberToFamilyCode,
+  extractCodeNumberFromFamilyCode,
+} from '../utils';
 import type { CreateFamilyInput } from './dto/input/create-family-input.dto';
 
 @Injectable()
@@ -25,21 +27,23 @@ export class FamilyService {
   }
 
   async create(data: CreateFamilyInput): Promise<Family> {
-    const familySlug = slug(data.name);
-    const extendedData = {
-      ...data,
-      slug: familySlug,
-    };
-
-    const isFamilyExists = await this.prisma.family.count({
-      where: { slug: familySlug },
-    });
-
-    if (isFamilyExists) {
-      extendedData.slug = `${familySlug}-${nanoid(5)}`;
-    }
-
     try {
+      const lastCreatedFamily = await this.prisma.family.findFirst({
+        orderBy: { created_at: 'desc' },
+        select: {
+          code: true,
+        },
+      });
+
+      const codeNumber = lastCreatedFamily
+        ? extractCodeNumberFromFamilyCode(lastCreatedFamily.code) + 1
+        : 1;
+
+      const extendedData = {
+        ...data,
+        code: convertCodeNumberToFamilyCode(codeNumber),
+      };
+
       const family = await this.prisma.family.create({ data: extendedData });
       return family;
     } catch (error) {
