@@ -1,21 +1,138 @@
-import type { TestingModule } from '@nestjs/testing';
+import { faker } from '@faker-js/faker';
+import type { INestApplication } from '@nestjs/common';
+import { GraphQLSchemaHost } from '@nestjs/graphql';
 import { Test } from '@nestjs/testing';
+import type { PrismaClient } from '@prisma/client';
+import { ApolloServer, gql } from 'apollo-server-express';
 
-import { HouseholderResolver } from './householder.resolver';
-import { HouseholderService } from './householder.service';
+import { AppModule } from '../app.module';
+import { FamilyService } from '../family/family.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 describe('HouseholderResolver', () => {
-  let resolver: HouseholderResolver;
+  let app: INestApplication;
+  let apolloServer: ApolloServer;
+  let prisma: PrismaClient;
+  let familyService: FamilyService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [HouseholderResolver, HouseholderService],
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [AppModule],
     }).compile();
 
-    resolver = module.get<HouseholderResolver>(HouseholderResolver);
+    app = moduleRef.createNestApplication();
+    await app.init();
+    const { schema } = app.get(GraphQLSchemaHost);
+    apolloServer = new ApolloServer({ schema });
+    prisma = app.get(PrismaService);
+    familyService = app.get(FamilyService);
+
+    await prisma.householder.deleteMany();
   });
 
-  it('should be defined', () => {
-    expect(resolver).toBeDefined();
+  afterAll(async () => {
+    await app.close();
+  });
+
+  describe('Create', () => {
+    it('should fail: throw error for required fields', async () => {
+      const input = {
+        name: faker.name.firstName(),
+        family_id: faker.database.mongodbObjectId(),
+      };
+      const query = gql`
+        mutation CreateHouseholder($input: CreateHouseholderInput!) {
+          createHouseholder(input: $input) {
+            ... on DraftHouseholder {
+              id
+              status
+            }
+          }
+        }
+      `;
+
+      const result = await apolloServer.executeOperation({ query });
+
+      const project = await prisma.project.findFirst({
+        where: { name: input.name },
+      });
+
+      expect(project).toBeNull();
+      expect(result.errors).toBeTruthy();
+      expect(result.data).toBeUndefined();
+    });
+
+    it('should fail: throw error for no family (relation)', async () => {
+      const input = {
+        name: faker.name.firstName(),
+        family_id: faker.database.mongodbObjectId(),
+      };
+      const query = gql`
+        mutation CreateHouseholder($input: CreateHouseholderInput!) {
+          createHouseholder(input: $input) {
+            ... on DraftHouseholder {
+              id
+              status
+            }
+          }
+        }
+      `;
+
+      const result = await apolloServer.executeOperation({
+        query,
+        variables: { input },
+      });
+
+      const project = await prisma.project.findFirst({
+        where: { name: input.name },
+      });
+
+      expect(project).toBeNull();
+      expect(result.errors).toBeTruthy();
+      expect(result.data?.['']).toBeUndefined();
+    });
+
+    it('should pass: create a householder for a family', async () => {
+      const input = {
+        name: faker.name.firstName(),
+        family_id: '',
+      };
+
+      const familyInput = { name: faker.name.firstName() };
+      const family = await familyService.create(familyInput);
+      input.family_id = family.id;
+
+      const query = gql`
+        mutation CreateHouseholder($input: CreateHouseholderInput!) {
+          createHouseholder(input: $input) {
+            ... on DraftHouseholder {
+              id
+              status
+              created_at
+              updated_at
+            }
+          }
+        }
+      `;
+
+      const result = await apolloServer.executeOperation({
+        query,
+        variables: { input },
+      });
+
+      const householder = await prisma.householder.findFirst({
+        where: { name: input.name },
+      });
+
+      expect(householder).toBeTruthy();
+      expect(householder).toMatchObject(input);
+
+      expect(result.errors).toBeFalsy();
+      expect(result.data).toBeTruthy();
+      expect(result.data?.['createHouseholder']).toBeTruthy();
+      expect(result.data?.['createHouseholder']).toMatchObject({});
+
+      await prisma.householder.deleteMany({ where: { name: input.name } });
+    });
   });
 });

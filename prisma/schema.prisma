@@ -38,7 +38,8 @@ model Member {
 model Householder {
   id String @id @default(cuid()) @db.VarChar(32)
 
-  name String
+  name   String
+  status HouseholderStatus @default(DRAFT)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -47,6 +48,11 @@ model Householder {
   family_id String @unique @db.VarChar(32)
 
   @@map("householder")
+}
+
+enum HouseholderStatus {
+  DRAFT
+  COMPLETED
 }
 
 model Family {

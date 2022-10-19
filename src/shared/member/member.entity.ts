@@ -1,6 +1,7 @@
 import { Field, ID, InterfaceType } from '@nestjs/graphql';
 
 import { Family } from '../../family/entities/family.entity';
+import { HouseholderStatus } from '../../householder/entities/householder-status.enum';
 import { Document } from '../document.type';
 import { Gender } from './gender.enum';
 import { Religion } from './religion.enum';
@@ -46,6 +47,15 @@ export abstract class Member {
   @Field(() => Religion, { nullable: true })
   religion?: Religion;
 
+  @Field(() => HouseholderStatus)
+  declare status: HouseholderStatus;
+
   @Field(() => Family)
   declare family: Family;
+
+  @Field(() => Date)
+  declare created_at: Date;
+
+  @Field(() => Date)
+  declare updated_at: Date;
 }
