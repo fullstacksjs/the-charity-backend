@@ -5,7 +5,4 @@ export enum HouseholderStatus {
   COMPLETED = 'COMPLETED',
 }
 
-registerEnumType(HouseholderStatus, {
-  name: 'HouseholderStatus',
-  description: 'householder status',
-});
+registerEnumType(HouseholderStatus, { name: 'HouseholderStatus' });

@@ -53,11 +53,11 @@ describe('HouseholderResolver', () => {
 
       const result = await apolloServer.executeOperation({ query });
 
-      const project = await prisma.project.findFirst({
+      const householder = await prisma.householder.findFirst({
         where: { name: input.name },
       });
 
-      expect(project).toBeNull();
+      expect(householder).toBeNull();
       expect(result.errors).toBeTruthy();
       expect(result.data).toBeUndefined();
     });
@@ -83,11 +83,11 @@ describe('HouseholderResolver', () => {
         variables: { input },
       });
 
-      const project = await prisma.project.findFirst({
+      const householder = await prisma.householder.findFirst({
         where: { name: input.name },
       });
 
-      expect(project).toBeNull();
+      expect(householder).toBeNull();
       expect(result.errors).toBeTruthy();
       expect(result.data?.['']).toBeUndefined();
     });

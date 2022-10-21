@@ -52,10 +52,9 @@ describe('HouseholderService', () => {
       jest
         .spyOn(prisma.householder, 'create')
         .mockRejectedValue(new Error(errorMessage));
+      const result = service.create(createHouseholderInput);
 
-      await expect(service.create(createHouseholderInput)).rejects.toThrow(
-        errorMessage,
-      );
+      await expect(result).rejects.toThrow(errorMessage);
     });
 
     it('should pass: return created householder', async () => {

@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
 import type { CreateHouseholderInput } from './dto/input/create-householder.input';
 
 @Injectable()
 export class HouseholderService {
+  private readonly logger = new Logger(HouseholderService.name);
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: CreateHouseholderInput) {
@@ -12,8 +13,8 @@ export class HouseholderService {
       const householder = await this.prisma.householder.create({ data });
       return householder;
     } catch (error) {
-      console.log({ error });
-      throw new Error('householder can not created');
+      this.logger.error({ errorOnCreateHouseholder: error });
+      throw error;
     }
   }
 }

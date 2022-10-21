@@ -4,7 +4,7 @@ import type { Householder } from '@prisma/client';
 import type { CreateHouseholderInput } from '../dto';
 
 export const createHouseholderInput: CreateHouseholderInput = {
-  name: 'خانواده حمیدی',
+  name: faker.name.fullName(),
   family_id: faker.database.mongodbObjectId(),
 };
 
