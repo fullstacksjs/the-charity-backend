@@ -14,8 +14,16 @@ export class FamilyService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
-    return `This action returns a families`;
+  async findAll({
+    take,
+    skip,
+  }: {
+    take?: number;
+    skip?: number;
+  }): Promise<Family[]> {
+    const families = await this.prisma.family.findMany({ take, skip });
+
+    return families;
   }
 
   findById(id: string): Promise<Family | null> {
