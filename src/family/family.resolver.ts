@@ -1,6 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { CreateFamilyInput } from './dto/input/create-family-input.dto';
+import { DraftFamily } from './entities/draft-family.entity';
 import { Family } from './entities/family.entity';
 import { FamilyService } from './family.service';
 
@@ -18,7 +19,7 @@ export class FamilyResolver {
     return this.familyService.findById(id);
   }
 
-  @Mutation(() => Family, { name: 'createFamily' })
+  @Mutation(() => DraftFamily, { name: 'createFamily' })
   create(@Args('input') data: CreateFamilyInput) {
     return this.familyService.create(data);
   }
