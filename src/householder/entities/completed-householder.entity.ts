@@ -21,7 +21,7 @@ import {
 import { DraftHouseholder } from './draft-householder.entity';
 
 @ObjectType({ implements: Member })
-export class CompleteHouseholder extends DraftHouseholder {
+export class CompletedHouseholder extends DraftHouseholder {
   @Field()
   declare firstName: string;
 
