@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import type { Family } from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 import {
@@ -7,6 +6,8 @@ import {
   extractCodeNumberFromFamilyCode,
 } from '../utils';
 import type { CreateFamilyInput } from './dto/input/create-family-input.dto';
+import type { GetFamiliesFilters } from './dto/input/get-families-filter.dto';
+import type { GetFamiliesOrderBy } from './dto/input/get-families-order-by.dto';
 
 @Injectable()
 export class FamilyService {
@@ -14,19 +15,22 @@ export class FamilyService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll({
-    take,
-    skip,
-  }: {
-    take?: number;
-    skip?: number;
-  }): Promise<Family[]> {
-    const families = await this.prisma.family.findMany({ take, skip });
+  async findAll(filters: GetFamiliesFilters, orderBy: GetFamiliesOrderBy) {
+    const families = await this.prisma.family.findMany({
+      where: {
+        ...(filters.householder_id && {
+          householder: { id: filters.householder_id },
+        }),
+      },
+      orderBy: {
+        ...(orderBy.created_at && { created_at: orderBy.created_at }),
+      },
+    });
 
     return families;
   }
 
-  findById(id: string): Promise<Family | null> {
+  findById(id: string) {
     return this.prisma.family.findUnique({
       where: {
         id,
@@ -34,7 +38,7 @@ export class FamilyService {
     });
   }
 
-  async create(data: CreateFamilyInput): Promise<Family> {
+  async create(data: CreateFamilyInput) {
     try {
       const lastCreatedFamily = await this.prisma.family.findFirst({
         orderBy: { created_at: 'desc' },
