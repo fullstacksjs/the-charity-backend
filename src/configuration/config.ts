@@ -1,4 +1,5 @@
 import { Env, getEnv as getBaseEnv, toInteger } from '@fullstacksjs/toolbox';
+import ms from 'ms';
 
 import type { Config } from './config.interface';
 import type { EnvKeys } from './config.schema';
@@ -19,12 +20,30 @@ const config: Config = {
   graphql: {
     debug: Env.isDev,
     introspection: Boolean(getEnv('INTROSPECTION_ENABLED')),
-    playgroundEnabled: false,
+    playground: {
+      settings: {
+        'request.credentials': 'include',
+      },
+    },
 
     cors: {
       credentials: true,
       originAsRegex: /https?:\/\/[a-z0-9\-_]+-fullstacks\.vercel\.app/,
       apolloSandboxOrigin: 'https://studio.apollographql.com',
+    },
+  },
+
+  auth: {
+    session: {
+      secret: getEnv('SESSION_SECRET')!,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        path: '/',
+        httpOnly: true,
+        secure: Env.isProd,
+        maxAge: ms('7d'),
+      },
     },
   },
 };

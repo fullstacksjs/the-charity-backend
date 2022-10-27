@@ -5,7 +5,8 @@ export type EnvKeys =
   | 'INTROSPECTION_ENABLED'
   | 'NODE_ENV'
   | 'PORT'
-  | 'PRISMA_LOG_LEVEL';
+  | 'PRISMA_LOG_LEVEL'
+  | 'SESSION_SECRET';
 
 export const configSchema = Joi.object<Record<EnvKeys, string>>({
   /* eslint-disable @typescript-eslint/naming-convention */
@@ -24,5 +25,7 @@ export const configSchema = Joi.object<Record<EnvKeys, string>>({
     .valid('info')
     .valid('query')
     .valid('warn'),
+
+  SESSION_SECRET: Joi.string().required(),
   /* eslint-enable @typescript-eslint/naming-convention */
 });

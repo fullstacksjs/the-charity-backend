@@ -1,19 +1,10 @@
 import type { INestApplication } from '@nestjs/common';
-import { HttpStatus } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as pactum from 'pactum';
 import { any, eachLike } from 'pactum-matchers';
 
 import { AppModule } from '../src/app.module';
-
-function graphqlRequest(query: string) {
-  return pactum
-    .spec()
-    .post('/graphql')
-    .withHeaders('Content-Type', 'application/json')
-    .withGraphQLQuery(query)
-    .expectStatus(HttpStatus.OK);
-}
+import { graphqlRequest } from './utils';
 
 describe('Smoke', () => {
   let app: INestApplication;

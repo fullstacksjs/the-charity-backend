@@ -3,8 +3,8 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 export class Admin {
   @Field(() => ID)
-  declare id: number;
+  declare id: string;
 
   @Field()
-  declare email: string;
+  declare username: string;
 }

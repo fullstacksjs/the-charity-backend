@@ -7,7 +7,6 @@ module.exports = {
     sourceType: 'module',
   },
   root: true,
-  ignorePatterns: ['.eslintrc.js'],
   rules: {
     '@typescript-eslint/naming-convention': [
       'warn',

@@ -28,6 +28,7 @@ jobs:
       INTROSPECTION_ENABLED: true
       PORT: 8080
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+      SESSION_SECRET: secret
     steps:
       - uses: actions/checkout@v3
       - uses: volta-cli/action@v3
