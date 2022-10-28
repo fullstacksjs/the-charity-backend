@@ -30,9 +30,7 @@ export class FamilyService {
     try {
       const lastCreatedFamily = await this.prisma.family.findFirst({
         orderBy: { created_at: 'desc' },
-        select: {
-          code: true,
-        },
+        select: { code: true },
       });
 
       const codeNumber = lastCreatedFamily

@@ -3,15 +3,17 @@ import { Test } from '@nestjs/testing';
 import { mockDeep } from 'jest-mock-extended';
 
 import { PrismaService } from '../prisma/prisma.service';
-import { AdminService } from './admin.service';
+import { AuthResolver } from './auth.resolver';
+import { AuthService } from './auth.service';
 
-describe('AdminService', () => {
-  let service: AdminService;
+describe('AuthResolver', () => {
+  let resolver: AuthResolver;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AdminService,
+        AuthService,
+        AuthResolver,
         {
           provide: PrismaService,
           useFactory: () => mockDeep<PrismaService>(),
@@ -19,10 +21,10 @@ describe('AdminService', () => {
       ],
     }).compile();
 
-    service = module.get<AdminService>(AdminService);
+    resolver = module.get<AuthResolver>(AuthResolver);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(resolver).toBeDefined();
   });
 });

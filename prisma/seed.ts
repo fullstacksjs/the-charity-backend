@@ -2,17 +2,16 @@ import { faker } from '@faker-js/faker';
 import type { Family, Prisma } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
 import argon2 from 'argon2';
-import { nanoid } from 'nanoid';
 
 import { convertCodeNumberToFamilyCode } from '../src/utils';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const originalPassword = nanoid();
+  const originalPassword = '123456789';
   const hashedPassword = await argon2.hash(originalPassword);
   const adminCreateInput: Prisma.AdminCreateInput = {
-    username: 'admin',
+    username: 'admin@gmail.com',
     password: hashedPassword,
   };
 
@@ -35,6 +34,7 @@ async function main() {
 
   // eslint-disable-next-line fp/no-let
   let family: Family;
+
   if (!existedFamily) {
     family = await prisma.family.create({ data: testFamily });
     console.log(
@@ -58,6 +58,7 @@ async function main() {
   }
 
   const projectCounts = await prisma.project.count();
+
   if (!projectCounts) {
     const testProject = {
       name: faker.lorem.word(5),
@@ -70,6 +71,7 @@ async function main() {
   }
 
   const membersCounts = await prisma.member.count();
+
   if (!membersCounts) {
     const testMembers = [
       { name: faker.name.fullName(), family_id: family.id },

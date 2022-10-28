@@ -3,7 +3,6 @@ import type { ApolloDriverConfig } from '@nestjs/apollo';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { GqlOptionsFactory } from '@nestjs/graphql';
-import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 
 import type { Config, GraphqlConfig } from '../configuration';
 import { IBAN, Money } from '../shared/scalars';
@@ -18,12 +17,12 @@ export class GraphQLConfigService implements GqlOptionsFactory {
     const apolloSandbox = graphqlConfig.cors.apolloSandboxOrigin;
 
     return {
-      playground: graphqlConfig.playgroundEnabled,
+      context: ({ req, res }) => ({ req, res }),
+      playground: graphqlConfig.playground,
       debug: graphqlConfig.debug,
       mocks: false,
       autoSchemaFile: true,
       resolvers: { Money, IBAN },
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
       introspection: graphqlConfig.introspection,
       cors: {
         origin: isDev ? [originAsRegex, apolloSandbox] : originAsRegex,
