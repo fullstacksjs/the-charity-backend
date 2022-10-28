@@ -5,12 +5,8 @@ import { mockDeep } from 'jest-mock-extended';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthService } from './auth.service';
-import {
-  adminExpectedResponse,
-  adminStub,
-  loginInputInValidPasswordDtoStub,
-  loginInputValidPasswordDtoStub,
-} from './stubs';
+import { ErrorMessage } from './dto/errors';
+import * as Stubs from './stubs';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -37,44 +33,27 @@ describe('AuthService', () => {
       expect(service.localLogin).toBeDefined();
     });
 
-    it('should be called with', async () => {
-      const test = jest
-        .spyOn(service, 'localLogin')
-        .mockResolvedValue({} as any);
-
-      await service.localLogin(loginInputInValidPasswordDtoStub);
-
-      expect(test).toHaveBeenCalledWith(loginInputInValidPasswordDtoStub);
-    });
-
-    it('should return null: no admin found with this username', async () => {
+    it('should throw error: no admin found with this username', async () => {
       jest.spyOn(prisma.admin, 'findFirst').mockResolvedValue(null);
 
-      const foundAdmin = await service.localLogin(
-        loginInputInValidPasswordDtoStub,
-      );
-
-      expect(foundAdmin).toBeNull();
+      await expect(() =>
+        service.localLogin(Stubs.invalidUsername),
+      ).rejects.toThrow(ErrorMessage.InvalidCredentials);
     });
 
     it('should return null: password not matched', async () => {
-      jest.spyOn(prisma.admin, 'findFirst').mockResolvedValue(adminStub);
+      jest.spyOn(prisma.admin, 'findFirst').mockResolvedValue(Stubs.dbAdmin);
 
-      const foundAdmin = await service.localLogin(
-        loginInputInValidPasswordDtoStub,
-      );
-
-      expect(foundAdmin).toBeNull();
+      await expect(() =>
+        service.localLogin(Stubs.invalidPassword),
+      ).rejects.toThrow(ErrorMessage.InvalidCredentials);
     });
 
     it('should be passed: return admin', async () => {
-      jest.spyOn(prisma.admin, 'findFirst').mockResolvedValue(adminStub);
+      jest.spyOn(prisma.admin, 'findFirst').mockResolvedValue(Stubs.dbAdmin);
+      const foundAdmin = await service.localLogin(Stubs.validCredentials);
 
-      const foundAdmin = await service.localLogin(
-        loginInputValidPasswordDtoStub,
-      );
-
-      expect(foundAdmin).toEqual(adminExpectedResponse);
+      expect(foundAdmin).toEqual(Stubs.adminExpectedResponse);
     });
   });
 

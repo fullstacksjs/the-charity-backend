@@ -3,7 +3,8 @@ import { Test } from '@nestjs/testing';
 import * as pactum from 'pactum';
 
 import { AppModule } from '../src/app.module';
-import { adminStub, loginInputValidPasswordDtoStub } from '../src/auth/stubs';
+import { ErrorMessage } from '../src/auth/dto/errors';
+import * as Stubs from '../src/auth/stubs';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { graphqlRequest } from './utils';
 
@@ -34,15 +35,15 @@ describe('Login', () => {
 
   it('should be logged in successfully', async () => {
     const adminCreateDto = {
-      username: adminStub.username,
-      password: adminStub.password,
+      username: Stubs.dbAdmin.username,
+      password: Stubs.dbAdmin.password,
     };
 
     const admin = await prisma.admin.create({
       data: adminCreateDto,
     });
 
-    const { username, password } = loginInputValidPasswordDtoStub;
+    const { username, password } = Stubs.validCredentials;
 
     const query = `
       mutation {
@@ -82,7 +83,7 @@ describe('Login', () => {
   });
 
   it('should return error: admin not found', async () => {
-    const { username, password } = loginInputValidPasswordDtoStub;
+    const { username, password } = Stubs.invalidUsername;
 
     const query = `
       mutation {
@@ -97,21 +98,19 @@ describe('Login', () => {
       const { body } = ctx.res;
 
       expect(body.errors).toBeTruthy();
-      expect(body.errors[0].message).toBe('AUTH.INVALID_CREDENTIALS');
+      expect(body.errors[0].message).toBe(ErrorMessage.InvalidCredentials);
       expect(body.data.login).toBeNull();
     });
   });
 
   it('should return error: admin password not correct', async () => {
     const adminCreateDto = {
-      username: adminStub.username,
-      password: adminStub.password,
+      username: Stubs.dbAdmin.username,
+      password: Stubs.dbAdmin.password,
     };
 
-    await prisma.admin.create({
-      data: adminCreateDto,
-    });
-    const { username } = loginInputValidPasswordDtoStub;
+    await prisma.admin.create({ data: adminCreateDto });
+    const { username } = Stubs.invalidPassword;
 
     const query = `
       mutation {
@@ -126,11 +125,11 @@ describe('Login', () => {
       const { body } = ctx.res;
 
       const error = body.errors.find(
-        (e: Error) => e.message === 'AUTH.INVALID_CREDENTIALS',
+        (e: Error) => e.message === ErrorMessage.InvalidCredentials,
       );
 
       expect(error).toBeTruthy();
-      expect(error.message).toBe('AUTH.INVALID_CREDENTIALS');
+      expect(error.message).toBe(ErrorMessage.InvalidCredentials);
       expect(body.data.login).toBeNull();
     });
 

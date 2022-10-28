@@ -3,17 +3,22 @@ import type { Admin } from '@prisma/client';
 
 import type { LoginInput, LoginResponseDto } from '../dto';
 
-export const loginInputInValidPasswordDtoStub: LoginInput = {
+export const invalidUsername: LoginInput = {
+  username: 'invalid@gmail.com',
+  password: '1234567',
+};
+
+export const invalidPassword: LoginInput = {
   username: 'admin@gmail.com',
   password: 'admin',
 };
 
-export const loginInputValidPasswordDtoStub: LoginInput = {
+export const validCredentials: LoginInput = {
   username: 'admin@gmail.com',
   password: '123456789',
 };
 
-export const adminStub: Admin = {
+export const dbAdmin: Admin = {
   id: faker.database.mongodbObjectId(),
   username: 'admin@gmail.com',
   password:
@@ -24,6 +29,6 @@ export const adminStub: Admin = {
 };
 
 export const adminExpectedResponse: LoginResponseDto = {
-  id: adminStub.id,
-  username: 'admin@gmail.com',
+  id: dbAdmin.id,
+  username: dbAdmin.username,
 };

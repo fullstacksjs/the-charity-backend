@@ -136,9 +136,6 @@ describe('Project Query', () => {
         variables: { input },
       });
 
-      const project = await prisma.project.findFirst();
-
-      expect(project).toBeNull();
       expect(result.errors).toBeTruthy();
       expect(result.data).toBeUndefined();
     });
