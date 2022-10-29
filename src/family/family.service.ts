@@ -15,15 +15,18 @@ export class FamilyService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(filters: GetFamiliesFilters, orderBy: GetFamiliesOrderBy) {
+  async findAll(
+    filters: GetFamiliesFilters | undefined,
+    orderBy: GetFamiliesOrderBy | undefined,
+  ) {
     const families = await this.prisma.family.findMany({
       where: {
-        ...(filters.householder_id && {
+        ...(filters?.householder_id && {
           householder: { id: filters.householder_id },
         }),
       },
       orderBy: {
-        ...(orderBy.created_at && { created_at: orderBy.created_at }),
+        ...(orderBy?.created_at && { created_at: orderBy.created_at }),
       },
     });
 

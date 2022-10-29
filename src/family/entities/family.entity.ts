@@ -11,4 +11,5 @@ export const Family = createUnionType({
     value.status === FamilyStatus.COMPLETED ? CompletedFamily : DraftFamily,
   types: () => [DraftFamily, CompletedFamily] as const,
 });
+
 export type Family = typeof Family;

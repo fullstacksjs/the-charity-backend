@@ -4,7 +4,7 @@ import * as Relay from 'graphql-relay';
 
 const typeMap: any = {};
 
-export default function relayTypes<T>(type: Type<T>): any {
+export function relayTypes<T>(type: Type<T>): any {
   const { name } = type;
   if (typeMap[`${name}`]) return typeMap[`${name}`];
 
