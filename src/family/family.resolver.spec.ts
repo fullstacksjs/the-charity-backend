@@ -192,8 +192,12 @@ describe('Family Queries', () => {
         families(filter: {}, orderBy: {}) {
           edges {
             node {
-              id
-              code
+              ... on DraftFamily {
+                dId: id
+              }
+              ... on CompletedFamily {
+                cId: id
+              }
             }
           }
         }
@@ -238,8 +242,14 @@ describe('Family Queries', () => {
         families(filter: { householder_id: "${householder.id}" }, orderBy: {}) {
           edges {
             node {
-              id
-              code
+              ... on DraftFamily {
+                dId: id
+                dCode: code
+              }
+              ... on CompletedFamily {
+                cId: id
+                cCode: code
+              }
             }
           }
         }
@@ -252,8 +262,60 @@ describe('Family Queries', () => {
     expect(result.data).toBeTruthy();
     expect(result.data?.['families']?.edges.length).toBe(1);
     expect(result.data?.['families']?.edges[0].node).toMatchObject({
-      id: familyWithHouseHolder.id,
-      code: familyWithHouseHolder.code,
+      dId: familyWithHouseHolder.id,
+      dCode: familyWithHouseHolder.code,
+    });
+  });
+
+  it('should return list of draft families and completed families', async () => {
+    const familiesToCreate = [
+      {
+        name: faker.name.fullName(),
+        code: convertCodeNumberToFamilyCode(1),
+        status: FamilyStatus.DRAFT,
+      },
+      {
+        name: faker.name.fullName(),
+        code: convertCodeNumberToFamilyCode(2),
+        status: FamilyStatus.COMPLETED,
+      },
+    ];
+
+    await prisma.family.createMany({
+      data: familiesToCreate,
+    });
+
+    const query = gql`
+      query {
+        families {
+          edges {
+            node {
+              ... on DraftFamily {
+                dId: id
+                dCode: code
+              }
+              ... on CompletedFamily {
+                cId: id
+                cCode: code
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const result = await apolloServer.executeOperation({ query });
+
+    expect(result.errors).toBeFalsy();
+    expect(result.data).toBeTruthy();
+    expect(result.data?.['families']?.edges.length).toBe(
+      familiesToCreate.length,
+    );
+    expect(result.data?.['families']?.edges[0].node).toMatchObject({
+      dCode: familiesToCreate[0]?.code,
+    });
+    expect(result.data?.['families']?.edges[1].node).toMatchObject({
+      cCode: familiesToCreate[1]?.code,
     });
   });
 
@@ -276,8 +338,14 @@ describe('Family Queries', () => {
         families(filter: {}, orderBy: $orderBy) {
           edges {
             node {
-              id
-              code
+              ... on DraftFamily {
+                dId: id
+                dCode: code
+              }
+              ... on CompletedFamily {
+                cId: id
+                cCode: code
+              }
             }
           }
         }
@@ -295,7 +363,7 @@ describe('Family Queries', () => {
       familiesToCreate.length,
     );
     expect(result.data?.['families']?.edges[0].node).toMatchObject({
-      code: familiesToCreate[familiesToCreate.length - 1]?.code,
+      dCode: familiesToCreate[familiesToCreate.length - 1]?.code,
     });
   });
 });
