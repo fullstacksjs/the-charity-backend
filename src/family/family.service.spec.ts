@@ -5,7 +5,10 @@ import type { MockProxy } from 'jest-mock-extended';
 import { mockDeep } from 'jest-mock-extended';
 
 import { PrismaService } from '../prisma/prisma.service';
+import { SortOrder } from '../shared/sort-order.enum';
 import type { CreateFamilyInput } from './dto/input/create-family-input.dto';
+import type { GetFamiliesFilters } from './dto/input/get-families-filter.dto';
+import type { GetFamiliesOrderBy } from './dto/input/get-families-order-by.dto';
 import { FamilyService } from './family.service';
 import { familyStub } from './stubs';
 
@@ -95,6 +98,53 @@ describe('FamilyService', () => {
       const family = await service.create({ name: familyStub.name });
 
       expect(family).toEqual(familyStub);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should be defined', () => {
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(service.findAll).toBeDefined();
+    });
+
+    it('should called with correct argument', async () => {
+      const filters: GetFamiliesFilters = {
+        householder_id: faker.database.mongodbObjectId(),
+      };
+      const orderBy: GetFamiliesOrderBy = { created_at: SortOrder.DESC };
+
+      const method = jest.spyOn(prisma.family, 'findMany');
+
+      await service.findAll(filters, orderBy);
+
+      expect(method).toHaveBeenCalledWith({
+        where: { householder: { id: filters.householder_id } },
+        orderBy: { created_at: 'desc' },
+      });
+
+      await service.findAll({}, {});
+
+      expect(method).toHaveBeenCalledWith({
+        where: {},
+        orderBy: {},
+      });
+
+      await service.findAll(filters, {});
+
+      expect(method).toHaveBeenCalledWith({
+        where: { householder: { id: filters.householder_id } },
+        orderBy: {},
+      });
+    });
+
+    it('should return list of families', async () => {
+      const familiesResult = [familyStub, familyStub];
+
+      jest.spyOn(prisma.family, 'findMany').mockResolvedValue(familiesResult);
+
+      const families = await service.findAll({}, {});
+
+      expect(families).toEqual(familiesResult);
     });
   });
 });

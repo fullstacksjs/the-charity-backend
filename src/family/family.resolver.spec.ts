@@ -33,6 +33,12 @@ describe('Family Queries', () => {
     await app.close();
   });
 
+  beforeEach(async () => {
+    await prisma.member.deleteMany();
+    await prisma.householder.deleteMany();
+    await prisma.family.deleteMany();
+  });
+
   it('should return null for an invalid id', async () => {
     const query = gql`
       query {
@@ -90,8 +96,6 @@ describe('Family Queries', () => {
       status: 'COMPLETED',
       id: family.id,
     });
-
-    await prisma.family.delete({ where: { id: family.id } });
   });
 
   it("should return a draft family from the DB when it's exists", async () => {
@@ -133,8 +137,6 @@ describe('Family Queries', () => {
       code: expect.any(String),
       id: family.id,
     });
-
-    await prisma.family.delete({ where: { id: family.id } });
   });
 
   it('should create family and returns it', async () => {
@@ -155,10 +157,6 @@ describe('Family Queries', () => {
     });
 
     expect(createdFamily).toBeTruthy();
-
-    await prisma.family.delete({
-      where: { id: result.data?.['createFamily']?.id },
-    });
   });
 
   it('should create two family with same name and different code', async () => {
@@ -177,13 +175,195 @@ describe('Family Queries', () => {
     expect(firstCode).toBeTruthy();
     expect(secondCode).toBeTruthy();
     expect(firstCode).not.toEqual(secondCode);
+  });
 
-    await prisma.family.deleteMany({
-      where: {
-        code: {
-          in: [firstCode, secondCode],
-        },
+  it('should return list of families', async () => {
+    const familiesToCreate = [
+      { name: faker.name.fullName(), code: convertCodeNumberToFamilyCode(1) },
+      { name: faker.name.fullName(), code: convertCodeNumberToFamilyCode(2) },
+    ];
+
+    await prisma.family.createMany({
+      data: familiesToCreate,
+    });
+
+    const query = gql`
+      query {
+        families(filter: {}, orderBy: {}) {
+          edges {
+            node {
+              ... on DraftFamily {
+                dId: id
+              }
+              ... on CompletedFamily {
+                cId: id
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const result = await apolloServer.executeOperation({ query });
+
+    expect(result.errors).toBeFalsy();
+    expect(result.data).toBeTruthy();
+    expect(result.data?.['families']?.edges.length).toBe(
+      familiesToCreate.length,
+    );
+  });
+
+  it('should return list of families by specified filter', async () => {
+    const familyWithHouseHolder = await prisma.family.create({
+      data: {
+        name: faker.name.fullName(),
+        code: convertCodeNumberToFamilyCode(1),
       },
+    });
+
+    const familiesToCreate = [
+      { name: faker.name.fullName(), code: convertCodeNumberToFamilyCode(2) },
+      { name: faker.name.fullName(), code: convertCodeNumberToFamilyCode(3) },
+    ];
+
+    await prisma.family.createMany({
+      data: familiesToCreate,
+    });
+
+    const householder = await prisma.householder.create({
+      data: {
+        name: faker.name.fullName(),
+        family_id: familyWithHouseHolder.id,
+      },
+    });
+
+    const query = gql`
+      query {
+        families(filter: { householder_id: "${householder.id}" }, orderBy: {}) {
+          edges {
+            node {
+              ... on DraftFamily {
+                dId: id
+                dCode: code
+              }
+              ... on CompletedFamily {
+                cId: id
+                cCode: code
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const result = await apolloServer.executeOperation({ query });
+
+    expect(result.errors).toBeFalsy();
+    expect(result.data).toBeTruthy();
+    expect(result.data?.['families']?.edges.length).toBe(1);
+    expect(result.data?.['families']?.edges[0].node).toMatchObject({
+      dId: familyWithHouseHolder.id,
+      dCode: familyWithHouseHolder.code,
+    });
+  });
+
+  it('should return list of draft families and completed families', async () => {
+    const familiesToCreate = [
+      {
+        name: faker.name.fullName(),
+        code: convertCodeNumberToFamilyCode(1),
+        status: FamilyStatus.DRAFT,
+      },
+      {
+        name: faker.name.fullName(),
+        code: convertCodeNumberToFamilyCode(2),
+        status: FamilyStatus.COMPLETED,
+      },
+    ];
+
+    await prisma.family.createMany({
+      data: familiesToCreate,
+    });
+
+    const query = gql`
+      query {
+        families {
+          edges {
+            node {
+              ... on DraftFamily {
+                dId: id
+                dCode: code
+              }
+              ... on CompletedFamily {
+                cId: id
+                cCode: code
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const result = await apolloServer.executeOperation({ query });
+
+    expect(result.errors).toBeFalsy();
+    expect(result.data).toBeTruthy();
+    expect(result.data?.['families']?.edges.length).toBe(
+      familiesToCreate.length,
+    );
+    expect(result.data?.['families']?.edges[0].node).toMatchObject({
+      dCode: familiesToCreate[0]?.code,
+    });
+    expect(result.data?.['families']?.edges[1].node).toMatchObject({
+      cCode: familiesToCreate[1]?.code,
+    });
+  });
+
+  it('should return list of families ordered by created_at (desc)', async () => {
+    const familiesToCreate = [
+      { name: faker.name.fullName(), code: convertCodeNumberToFamilyCode(1) },
+      {
+        name: faker.name.fullName(),
+        code: convertCodeNumberToFamilyCode(2),
+        created_at: faker.date.future(),
+      },
+    ];
+
+    await prisma.family.createMany({
+      data: familiesToCreate,
+    });
+
+    const query = gql`
+      query ($orderBy: GetFamiliesOrderBy!) {
+        families(filter: {}, orderBy: $orderBy) {
+          edges {
+            node {
+              ... on DraftFamily {
+                dId: id
+                dCode: code
+              }
+              ... on CompletedFamily {
+                cId: id
+                cCode: code
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const result = await apolloServer.executeOperation({
+      query,
+      variables: { orderBy: { created_at: 'DESC' } },
+    });
+
+    expect(result.errors).toBeFalsy();
+    expect(result.data).toBeTruthy();
+    expect(result.data?.['families']?.edges.length).toBe(
+      familiesToCreate.length,
+    );
+    expect(result.data?.['families']?.edges[0].node).toMatchObject({
+      dCode: familiesToCreate[familiesToCreate.length - 1]?.code,
     });
   });
 });

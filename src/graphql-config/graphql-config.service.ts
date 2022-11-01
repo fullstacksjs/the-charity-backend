@@ -21,6 +21,9 @@ export class GraphQLConfigService implements GqlOptionsFactory {
       playground: graphqlConfig.playground,
       debug: graphqlConfig.debug,
       mocks: false,
+      buildSchemaOptions: {
+        numberScalarMode: 'integer',
+      },
       autoSchemaFile: true,
       resolvers: { Money, IBAN },
       introspection: graphqlConfig.introspection,

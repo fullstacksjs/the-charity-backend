@@ -36,4 +36,10 @@ export class DraftFamily {
 
   @Field(() => [Dependent])
   declare dependents: Dependent[];
+
+  @Field()
+  declare created_at: Date;
+
+  @Field()
+  declare updated_at: Date;
 }
