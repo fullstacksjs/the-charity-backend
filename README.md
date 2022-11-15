@@ -15,10 +15,10 @@ npm install
 ```
 
 Also, you should fill in the environment variables, you can copy the variables
-from example.env using the below command:
+from .env.example using the below command:
 
 ```bash
-cp example.env .development.env
+cp .env.example .env.development
 ```
 
 then you need to migrate your database and keep it synced with schema using the
