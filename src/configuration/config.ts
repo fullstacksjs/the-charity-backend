@@ -41,7 +41,7 @@ const config: Config = {
       cookie: {
         path: '/',
         httpOnly: true,
-        secure: true,
+        secure: Env.isProd,
         maxAge: ms('7d'),
       },
     },
