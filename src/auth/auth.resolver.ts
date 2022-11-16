@@ -21,6 +21,7 @@ export class AuthResolver {
 
     response.cookie('is-logged-in', true, {
       httpOnly: false,
+      secure: true,
       maxAge: ms('7d'),
     });
 

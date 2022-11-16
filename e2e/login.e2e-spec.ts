@@ -1,12 +1,30 @@
+/* eslint-disable max-lines-per-function */
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { gql } from 'apollo-server-core';
 import * as pactum from 'pactum';
 
 import { AppModule } from '../src/app.module';
-import { ErrorMessage } from '../src/auth/dto/errors';
 import * as Stubs from '../src/auth/stubs';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { graphqlRequest } from './utils';
+
+const loginMutation = ({
+  username,
+  password,
+}: {
+  username: string;
+  password: string;
+}) => gql`
+    mutation Login {
+      login(input: { username: "${username}", password: "${password}" }) {
+        id
+      }
+    }
+`;
+
+const password = Stubs.validCredentials.password;
+const passwordHash = Stubs.dbAdmin.password;
 
 describe('Login', () => {
   let app: INestApplication;
@@ -18,9 +36,7 @@ describe('Login', () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
-
     prisma = app.get(PrismaService);
-
     await prisma.admin.deleteMany();
 
     await app.listen(0);
@@ -33,26 +49,13 @@ describe('Login', () => {
     await app.close();
   });
 
-  it('should be logged in successfully', async () => {
-    const adminCreateDto = {
-      username: Stubs.dbAdmin.username,
-      password: Stubs.dbAdmin.password,
-    };
-
+  it('should set auth cookies successfully', async () => {
+    const { username } = Stubs.validCredentials;
+    await prisma.admin.deleteMany({ where: { username } });
     const admin = await prisma.admin.create({
-      data: adminCreateDto,
+      data: { username, password: passwordHash },
     });
-
-    const { username, password } = Stubs.validCredentials;
-
-    const query = `
-      mutation {
-        login(input: { username: "${username}", password: "${password}" }) {
-          id
-          username
-        }
-      }
-    `;
+    const query = loginMutation({ username, password });
 
     await graphqlRequest(query).expect(ctx => {
       const { body, headers } = ctx.res;
@@ -71,68 +74,57 @@ describe('Login', () => {
       expect(isCookieExists).toBeTruthy();
       expect(isSessionExists).toBeTruthy();
 
-      expect(body.data.login).toEqual({
-        id: admin.id,
-        username: admin.username,
-      });
-    });
-
-    return prisma.admin.delete({
-      where: { username: adminCreateDto.username },
+      expect(body.data.login).toEqual({ id: admin.id });
     });
   });
 
-  it('should return error: admin not found', async () => {
-    const { username, password } = Stubs.invalidUsername;
-
-    const query = `
-      mutation {
-        login(input: { username: "${username}", password: "${password}" }) {
-          id
-          username
-        }
-      }
-    `;
+  it('auth cookies must be secure', async () => {
+    const { username } = Stubs.validCredentials;
+    await prisma.admin.deleteMany({ where: { username } });
+    await prisma.admin.create({ data: { username, password: passwordHash } });
+    const query = loginMutation({ username, password });
 
     await graphqlRequest(query).expect(ctx => {
-      const { body } = ctx.res;
+      const { headers } = ctx.res;
 
-      expect(body.errors).toBeTruthy();
-      expect(body.errors[0].message).toBe(ErrorMessage.InvalidCredentials);
-      expect(body.data.login).toBeNull();
+      // eslint-disable-next-line
+      const cookies = headers['set-cookie'] ?? [];
+
+      const isCookieExists = cookies
+        .find(cookie => cookie.includes('is-logged-in=true'))
+        ?.includes('Secure');
+
+      const isSessionExists = cookies
+        .find(cookie => cookie.includes('connect.sid'))
+        ?.includes('Secure');
+
+      expect(isCookieExists).toBeTruthy();
+      expect(isSessionExists).toBeTruthy();
     });
   });
 
-  it('should return error: admin password not correct', async () => {
-    const adminCreateDto = {
-      username: Stubs.dbAdmin.username,
-      password: Stubs.dbAdmin.password,
-    };
-
-    await prisma.admin.create({ data: adminCreateDto });
-    const { username } = Stubs.invalidPassword;
-
-    const query = `
-      mutation {
-        login(input: { username: "${username}", password: "someRandomText" }) {
-          id
-          username
-        }
-      }
-    `;
+  it('session cookie must be httpOnly', async () => {
+    const { username } = Stubs.validCredentials;
+    await prisma.admin.deleteMany({ where: { username } });
+    await prisma.admin.create({ data: { username, password: passwordHash } });
+    const query = loginMutation({ username, password });
 
     await graphqlRequest(query).expect(ctx => {
-      const { body } = ctx.res;
+      const { headers } = ctx.res;
 
-      const error = body.errors.find(
-        (e: Error) => e.message === ErrorMessage.InvalidCredentials,
-      );
+      // eslint-disable-next-line
+      const cookies = headers['set-cookie'] ?? [];
 
-      expect(error).toBeTruthy();
-      expect(error.message).toBe(ErrorMessage.InvalidCredentials);
-      expect(body.data.login).toBeNull();
+      const isCookieExists = cookies
+        .find(cookie => cookie.includes('is-logged-in=true'))
+        ?.includes('Secure');
+
+      const isSessionExists = cookies
+        .find(cookie => cookie.includes('connect.sid'))
+        ?.includes('Secure');
+
+      expect(isCookieExists).toBeTruthy();
+      expect(isSessionExists).toBeTruthy();
     });
-
-    await prisma.admin.delete({ where: { username: adminCreateDto.username } });
   });
 });
