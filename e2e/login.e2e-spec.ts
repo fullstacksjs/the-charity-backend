@@ -37,7 +37,6 @@ describe('Login', () => {
 
     app = moduleRef.createNestApplication();
     prisma = app.get(PrismaService);
-    await prisma.admin.deleteMany();
 
     await app.listen(0);
     const url = await app.getUrl();
