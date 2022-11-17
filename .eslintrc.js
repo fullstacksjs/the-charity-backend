@@ -2,7 +2,7 @@
 module.exports = {
   extends: ['@fullstacksjs', '@fullstacksjs/eslint-config/typecheck'],
   parserOptions: {
-    project: 'tsconfig.json',
+    project: 'tsconfig.eslint.json',
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },

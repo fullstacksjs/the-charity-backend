@@ -8,6 +8,7 @@ import { ApolloServer, gql } from 'apollo-server-express';
 import { AppModule } from '../app.module';
 import { FamilyService } from '../family/family.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { EmptyLogger } from '../shared/empty-logger';
 
 describe('HouseholderResolver', () => {
   let app: INestApplication;
@@ -16,18 +17,17 @@ describe('HouseholderResolver', () => {
   let familyService: FamilyService;
 
   beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
-    app = moduleRef.createNestApplication();
+    module.useLogger(new EmptyLogger());
+    app = module.createNestApplication();
     await app.init();
     const { schema } = app.get(GraphQLSchemaHost);
     apolloServer = new ApolloServer({ schema });
     prisma = app.get(PrismaService);
     familyService = app.get(FamilyService);
-
-    await prisma.householder.deleteMany();
   });
 
   afterAll(async () => {
@@ -124,13 +124,13 @@ describe('HouseholderResolver', () => {
         where: { name: input.name },
       });
 
-      expect(householder).toBeTruthy();
-      expect(householder).toMatchObject(input);
-
       expect(result.errors).toBeFalsy();
       expect(result.data).toBeTruthy();
       expect(result.data?.['createHouseholder']).toBeTruthy();
       expect(result.data?.['createHouseholder']).toMatchObject({});
+
+      expect(householder).toBeTruthy();
+      expect(householder).toMatchObject(input);
 
       await prisma.householder.deleteMany({ where: { name: input.name } });
     });

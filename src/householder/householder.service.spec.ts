@@ -4,6 +4,7 @@ import type { MockProxy } from 'jest-mock-extended';
 import { mockDeep } from 'jest-mock-extended';
 
 import { PrismaService } from '../prisma/prisma.service';
+import { EmptyLogger } from '../shared/empty-logger';
 import { HouseholderService } from './householder.service';
 import {
   createHouseholderInput,
@@ -25,6 +26,7 @@ describe('HouseholderService', () => {
       ],
     }).compile();
 
+    module.useLogger(new EmptyLogger());
     service = module.get<HouseholderService>(HouseholderService);
     prisma = module.get(PrismaService);
   });
