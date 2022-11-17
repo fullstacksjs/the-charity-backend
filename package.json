@@ -16,7 +16,7 @@
     "test:debug": "dotenv node -e .env.test --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "dotenv -e .env.test -- jest --config ./e2e/jest-e2e.json",
     "studio": "dotenv -e .env.development -- prisma studio",
-    "migrate": "dotenv -e .env.development -- prisma migrate dev",
+    "migrate": "dotenv -e .env.development -- prisma migrate dev --force",
     "generate": "prisma generate",
     "seed": "dotenv -e .env.development -- prisma db seed",
     "spell": "cspell ./src/**/*",
