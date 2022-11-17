@@ -1,5 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { gql } from 'apollo-server-core';
 import * as pactum from 'pactum';
 import { any, eachLike } from 'pactum-matchers';
 
@@ -26,7 +27,15 @@ describe('Smoke', () => {
   });
 
   it('should be able to fetch the schema', async () => {
-    const query = `query { __schema { types { description } } }`;
+    const query = gql`
+      query Schema {
+        __schema {
+          types {
+            description
+          }
+        }
+      }
+    `;
 
     await graphqlRequest(query).expectJsonMatch({
       data: { __schema: { types: eachLike({ description: any() }) } },
