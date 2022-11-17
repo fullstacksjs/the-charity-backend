@@ -29,7 +29,7 @@ model Member {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  family    Family @relation(fields: [family_id], references: [id])
+  family    Family @relation(fields: [family_id], references: [id], onDelete: Cascade)
   family_id String @db.VarChar(32)
 
   @@map("member")
@@ -44,7 +44,7 @@ model Householder {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  family    Family @relation(fields: [family_id], references: [id])
+  family    Family @relation(fields: [family_id], references: [id], onDelete: Cascade)
   family_id String @unique @db.VarChar(32)
 
   @@map("householder")
@@ -59,7 +59,7 @@ model Family {
   id String @id @default(cuid()) @db.VarChar(32)
 
   name     String
-  code     String         @db.VarChar(6)
+  code     String         @unique @db.VarChar(6)
   status   FamilyStatus   @default(DRAFT)
   severity FamilySeverity @default(NORMAL)
 

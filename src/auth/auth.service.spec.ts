@@ -4,6 +4,7 @@ import type { MockProxy } from 'jest-mock-extended';
 import { mockDeep } from 'jest-mock-extended';
 
 import { PrismaService } from '../prisma/prisma.service';
+import { EmptyLogger } from '../shared/empty-logger';
 import { AuthService } from './auth.service';
 import { ErrorMessage } from './dto/errors';
 import * as Stubs from './stubs';
@@ -23,6 +24,7 @@ describe('AuthService', () => {
       ],
     }).compile();
 
+    module.useLogger(new EmptyLogger());
     service = module.get<AuthService>(AuthService);
     prisma = module.get(PrismaService);
   });

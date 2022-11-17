@@ -5,6 +5,7 @@ import type { MockProxy } from 'jest-mock-extended';
 import { mockDeep } from 'jest-mock-extended';
 
 import { PrismaService } from '../prisma/prisma.service';
+import { EmptyLogger } from '../shared/empty-logger';
 import { SortOrder } from '../shared/sort-order.enum';
 import type { CreateFamilyInput } from './dto/input/create-family-input.dto';
 import type { GetFamiliesFilters } from './dto/input/get-families-filter.dto';
@@ -27,6 +28,7 @@ describe('FamilyService', () => {
       ],
     }).compile();
 
+    module.useLogger(new EmptyLogger());
     service = module.get<FamilyService>(FamilyService);
     prisma = module.get(PrismaService);
   });
