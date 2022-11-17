@@ -7,7 +7,7 @@ import * as pactum from 'pactum';
 import { AppModule } from '../src/app.module';
 import * as Stubs from '../src/auth/stubs';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { graphqlRequest } from './utils';
+import { getCookies, graphqlRequest } from './utils';
 
 const loginMutation = ({
   username,
@@ -59,21 +59,10 @@ describe('Login', () => {
 
     await graphqlRequest(query).expect(ctx => {
       const { body, headers } = ctx.res;
+      const cookies = getCookies(headers);
 
-      // eslint-disable-next-line
-      const cookies = headers['set-cookie'] ?? [];
-
-      const isCookieExists = cookies.some(cookie =>
-        cookie.includes('is-logged-in=true'),
-      );
-
-      const isSessionExists = cookies.some(cookie =>
-        cookie.includes('connect.sid'),
-      );
-
-      expect(isCookieExists).toBeTruthy();
-      expect(isSessionExists).toBeTruthy();
-
+      expect(cookies.session).toBeTruthy();
+      expect(cookies.auth).toBeTruthy();
       expect(body.data.login).toEqual({ id: admin.id });
     });
   });
@@ -86,20 +75,9 @@ describe('Login', () => {
 
     await graphqlRequest(query).expect(ctx => {
       const { headers } = ctx.res;
+      const cookies = getCookies(headers);
 
-      // eslint-disable-next-line
-      const cookies = headers['set-cookie'] ?? [];
-
-      const isCookieExists = cookies
-        .find(cookie => cookie.includes('is-logged-in=true'))
-        ?.includes('Secure');
-
-      const isSessionExists = cookies
-        .find(cookie => cookie.includes('connect.sid'))
-        ?.includes('Secure');
-
-      expect(isCookieExists).toBeTruthy();
-      expect(isSessionExists).toBeTruthy();
+      expect(cookies.auth?.includes('Secure')).toBeTruthy();
     });
   });
 
@@ -111,20 +89,24 @@ describe('Login', () => {
 
     await graphqlRequest(query).expect(ctx => {
       const { headers } = ctx.res;
+      const cookies = getCookies(headers);
 
-      // eslint-disable-next-line
-      const cookies = headers['set-cookie'] ?? [];
+      expect(cookies.session?.includes('HttpOnly')).toBeTruthy();
+    });
+  });
 
-      const isCookieExists = cookies
-        .find(cookie => cookie.includes('is-logged-in=true'))
-        ?.includes('Secure');
+  it('auth cookie must not be httpOnly', async () => {
+    const { username } = Stubs.validCredentials;
+    await prisma.admin.deleteMany({ where: { username } });
+    await prisma.admin.create({ data: { username, password: passwordHash } });
+    const query = loginMutation({ username, password });
 
-      const isSessionExists = cookies
-        .find(cookie => cookie.includes('connect.sid'))
-        ?.includes('Secure');
+    await graphqlRequest(query).expect(ctx => {
+      const { headers } = ctx.res;
+      const cookies = getCookies(headers);
 
-      expect(isCookieExists).toBeTruthy();
-      expect(isSessionExists).toBeTruthy();
+      expect(cookies.auth).toBeDefined();
+      expect(cookies.auth?.includes('HttpOnly')).toBeFalsy();
     });
   });
 });
